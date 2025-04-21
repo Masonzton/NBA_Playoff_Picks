@@ -5,6 +5,7 @@ from enum import Enum
 from typing import Union, Tuple, List
 from copy import deepcopy
 from functools import cached_property
+from random import choices as random_choice
 
 class Team(Enum):
     THUNDER =      ("THUNDER", 1)
@@ -282,7 +283,15 @@ def greedy_fill_bracket(bracket: Matchup, choices: Tuple[Team, Team, Team, Team]
 
     if scoreA == 0 and scoreB == 0:
         # doesn't matter who wins really. Just want less games in general
-        if bracket.winsA > bracket.winsB:
+        # and also the better team to win so less points to other people
+
+        # least new points generated
+        if teamA.points < teamB.points:
+            bracket.winsA = 4
+        elif teamB.points < teamA.points:
+            bracket.winsB = 4
+        # less games option
+        elif bracket.winsA > bracket.winsB:
             bracket.winsA = 4
         else:
             bracket.winsB = 4
@@ -353,7 +362,56 @@ def get_max_score_of_all_players():
             additional = "_"
         print(f"{additional}{player} current score {current_score} max score is {best_score}, best opponent score is: {best_opponent_score} who is {best_opponent_player}")
 
+def random_bracket_fill(bracket: Matchup):
+    if bracket.get_team() is not None:
+        # nothing to fill out since the bracket has it's winners already
+        return
+    elif type(bracket.teamA) == Matchup:
+        # fill out the left and right bracket's first if they are a matchup object
+        if bracket.teamA.get_team() is None:
+            random_bracket_fill(bracket=bracket.teamA)
+        if bracket.teamB.get_team() is None:
+            random_bracket_fill(bracket=bracket.teamB)
+    else:
+        # this is an unfilled out team thing
+        assert type(bracket.teamB) == Team
+        assert type(bracket.teamA) == Team
+    
+    # randomly assign the wins for this matchup
+    # TODO: assign distribution based on a 50/50 matchup odds. this uniform selection is odd
+    a_win_options = [(4, b) for b in range(bracket.winsB, 4)] # b can win up to 3 times
+    b_win_options = [(a, 4) for a in range(bracket.winsA, 4)] # a can win up to 3 times
+    options = a_win_options + b_win_options
+    outcome = random_choice(population=options)
+    bracket.winsA, bracket.winsB = outcome[0]
+
+def simulate_random_brackets():
+    player_wins = {player: 0 for player in PLAYER_CHOICES.keys()}
+    simulations = 100_000
+    for _ in range(simulations):
+        bracket_copy = deepcopy(BRACKET_MATCHUP)
+        random_bracket_fill(bracket_copy)
+
+        # TODO: implement a faster scoring function
+        # TODO: account for ties
+        best_player = None
+        best_score = 0
+        for player, choices in PLAYER_CHOICES.items():
+            score = compute_score_from_bracket(bracket=bracket_copy, choices=choices)
+            if score > best_score:
+                best_score = score
+                best_player = player
+        
+        player_wins[best_player] += 1
+    
+    print(f"{simulations} Random simulations results")
+    print(player_wins)
+    # player_percentage_wins = {player: wins / simulations for player, wins in player_wins.items()}
+    # print(player_percentage_wins)
+
+
+
 if __name__ == "__main__":
     check_any_players_match()
     get_max_score_of_all_players()
-    pass
+    simulate_random_brackets()
