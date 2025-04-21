@@ -279,12 +279,27 @@ def greedy_fill_bracket(bracket: Matchup, choices: Tuple[Team, Team, Team, Team]
 
     assert bracket.winsA < 4
     assert bracket.winsB < 4
-    if scoreA > scoreB:
-        bracket.winsA = 4
-        bracket.winsB = 3
-    else:
+
+    if scoreA == 0 and scoreB == 0:
+        # doesn't matter who wins really. Just want less games in general
+        if bracket.winsA > bracket.winsB:
+            bracket.winsA = 4
+        else:
+            bracket.winsB = 4
+    elif scoreA == 0 and scoreB > 0:
+        # we want B to win it all
         bracket.winsB = 4
-        bracket.winsA = 3
+    elif scoreB == 0 and scoreA > 0:
+        # we want A to win it all
+        bracket.winsA = 4
+    elif scoreA > 0 and scoreB > 0:
+        # we want a really close game
+        if scoreA > scoreB:
+            bracket.winsA = 4
+            bracket.winsB = 3
+        else:
+            bracket.winsB = 4
+            bracket.winsA = 3
 
 def compute_score_from_bracket(bracket: Matchup, choices: Tuple[Team, Team, Team, Team]) -> int:
     # search the tree and accumulates points for each favorable score
@@ -293,6 +308,7 @@ def compute_score_from_bracket(bracket: Matchup, choices: Tuple[Team, Team, Team
     queue.append(bracket.teamA)
     queue.append(bracket.teamB)
     points = 0
+
     while queue:
         m = queue.pop(0)
 
@@ -313,12 +329,29 @@ def compute_score_from_bracket(bracket: Matchup, choices: Tuple[Team, Team, Team
     return points
 
 def get_max_score_of_all_players():
+    print("* means they can win in their best case scenario, _ means they can't. Not exhaustive though")
     for player, choices in PLAYER_CHOICES.items():
         ideal_bracket = deepcopy(BRACKET_MATCHUP)
         # depth first recursively fill out the bracket in a greedy way
         greedy_fill_bracket(ideal_bracket, choices)
-        score = compute_score_from_bracket(bracket=ideal_bracket, choices=choices)
-        print(f"{player} max score is {score}")
+        best_score = compute_score_from_bracket(bracket=ideal_bracket, choices=choices)
+
+        best_opponent_player = None
+        best_opponent_score = 0
+        for playerO, choiceO in PLAYER_CHOICES.items():
+            if playerO == player:
+                continue
+            scoreO = compute_score_from_bracket(bracket=ideal_bracket, choices=choiceO)
+            if scoreO > best_opponent_score:
+                best_opponent_score = scoreO
+                best_opponent_player = playerO
+
+        current_score = compute_score_from_bracket(bracket=BRACKET_MATCHUP, choices=choices)
+        if best_score > best_opponent_score:
+            additional = "*"
+        else:
+            additional = "_"
+        print(f"{additional}{player} current score {current_score} max score is {best_score}, best opponent score is: {best_opponent_score} who is {best_opponent_player}")
 
 if __name__ == "__main__":
     check_any_players_match()
