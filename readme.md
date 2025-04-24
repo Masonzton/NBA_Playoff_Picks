@@ -13,8 +13,8 @@ The nba.py script is meant to determine if at any point a player is "out" meanin
 
 For the first round, it is isn't feasible or necessary to iterate over all 8^15 ~ 10 trillion potential brackets.
 Instead a monte carlo like or random simulation is employed to confirm that indeed any person has the possibility to win.
-You can also get a sense of the distribution of how many different ways a each person could win. However, this just heavily favors people who picked a lot of lower seeds since it doesn't consider the inherent lower odds of them winning games.
+You can also get a sense of the distribution of how many different ways each person could win. However, this heavily favors people who picked lower seed teams since it doesn't consider the lower chances of them winning games vs the extra points won.
 
-I also computed the maximum score each person just to see.
+Later, I will iterate over all possible brackets when there are less games to play.
 
-When the number of games left to play is smaller, the number of potential brackets is a lot more tractable to iterate over.
+I also computed the maximum score each person and see if they are winning the bracket in that best case situation.
