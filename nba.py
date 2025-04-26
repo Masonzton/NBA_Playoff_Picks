@@ -93,7 +93,7 @@ BRACKET_MATCHUP = Matchup(
             # 1,8
             winsA=0,
             teamA=Matchup(
-                winsA=1,
+                winsA=3,
                 teamA=Team.THUNDER,
                 winsB=0,
                 teamB=Team.GRIZZLIES,
@@ -101,9 +101,9 @@ BRACKET_MATCHUP = Matchup(
             # 4,5
             winsB=0,
             teamB=Matchup(
-                winsA=1,
+                winsA=2,
                 teamA=Team.NUGGETS,
-                winsB=0,
+                winsB=1,
                 teamB=Team.CLIPPERS,
             ),
         ),
@@ -112,7 +112,7 @@ BRACKET_MATCHUP = Matchup(
             # 3,6
             winsA=0,
             teamA=Matchup(
-                winsA=0,
+                winsA=2,
                 teamA=Team.LAKERS,
                 winsB=1,
                 teamB=Team.TIMBERWOLVES,
@@ -120,10 +120,10 @@ BRACKET_MATCHUP = Matchup(
             # 2,7
             winsB=0,
             teamB=Matchup(
+                winsA=1,
                 teamA=Team.ROCKETS,
+                winsB=1,
                 teamB=Team.WARRIORS,
-                winsA=0,
-                winsB=0,
             ),
         ),
     ),
@@ -135,7 +135,7 @@ BRACKET_MATCHUP = Matchup(
             # 1,8
             winsA=0,
             teamA=Matchup(
-                winsA=0,
+                winsA=2,
                 teamA=Team.CAVALIERS,
                 winsB=0,
                 teamB=Team.HEAT,
@@ -143,9 +143,9 @@ BRACKET_MATCHUP = Matchup(
             # 4,5
             winsB=0,
             teamB=Matchup(
-                winsA=1,
+                winsA=2,
                 teamA=Team.PACERS,
-                winsB=0,
+                winsB=1,
                 teamB=Team.BUCKS,
             ),
         ),
@@ -154,17 +154,17 @@ BRACKET_MATCHUP = Matchup(
             # 3,6
             winsA=0,
             teamA=Matchup(
-                winsA=1,
+                winsA=2,
                 teamA=Team.KNICKS,
-                winsB=0,
+                winsB=1,
                 teamB=Team.PISTONS,
             ),
             # 2,7
             winsB=0,
             teamB=Matchup(
-                winsA=0,
+                winsA=2,
                 teamA=Team.CELTICS,
-                winsB=0,
+                winsB=1,
                 teamB=Team.MAGIC,
             ),
         ),
@@ -342,11 +342,34 @@ def compute_score_from_bracket(
 
     return points
 
+def print_tabulate(header: Tuple[str], data: List[Tuple]):
+    """
+    Print a list of information in a nice tabulated form
+    """
+    assert len(header) == len(data[0])
+    # First, calculate the maximum width for each column
+    col_widths = [max(len(str(row[i])) for row in data + [header]) for i in range(len(header))]
+
+    # Print the header
+    header_str_list = [f"{header[i]:<{col_widths[i]}}" for i in range(len(header))]
+    header_str = "  ".join(header_str_list)
+    print(header_str)
+    print("-" * (sum(col_widths) + 6))
+
+    # Print each row
+    for row in data:
+        assert len(row) == len(header)
+        row_str_list = [f"{row[i]:<{col_widths[i]}}" for i in range(len(row))]
+        row_str = "  ".join(row_str_list)
+        print(row_str)
+ 
 
 def get_max_score_of_all_players():
     print(
-        "* means they can win in their best case scenario, _ means they can't. Not exhaustive though"
+        "* means they can win in their best case scenario, _ means they don't happen to win in"
+        "the scenario created. Not exhaustive"
     )
+    data = []
     for player, choices in PLAYER_CHOICES.items():
         ideal_bracket = deepcopy(BRACKET_MATCHUP)
         # depth first recursively fill out the bracket in a greedy way
@@ -367,12 +390,19 @@ def get_max_score_of_all_players():
             bracket=BRACKET_MATCHUP, choices=choices
         )
         if best_score > best_opponent_score:
-            additional = "*"
+            winning = "*"
         else:
-            additional = "_"
-        print(
-            f"{additional}{player} current score {current_score} max score is {best_score}, best opponent score is: {best_opponent_score} who is {best_opponent_player}"
+            winning = "_"
+        data.append(
+            (player, winning, current_score, best_score, best_opponent_player, best_opponent_score)
         )
+    
+    # sort by current score
+    data.sort(key=lambda x: x[2], reverse=True)
+    print_tabulate(
+        header=("player", "W", "Current Score", "Max Score", "Best Opponent", "Best Opponent Score"),
+        data=data
+    )
 
 
 def random_uniform_bracket_fill(bracket: Matchup):
@@ -404,7 +434,7 @@ def random_uniform_bracket_fill(bracket: Matchup):
 # 8^15 or 10 trillion
 def simulate_random_brackets():
     player_wins = {player: 0 for player in PLAYER_CHOICES.keys()}
-    simulations = 100_000
+    simulations = 10_000
     for _ in range(simulations):
         bracket_copy = deepcopy(BRACKET_MATCHUP)
         random_uniform_bracket_fill(bracket_copy)
@@ -428,4 +458,4 @@ def simulate_random_brackets():
 if __name__ == "__main__":
     check_any_players_match()
     get_max_score_of_all_players()
-    simulate_random_brackets()
+    # simulate_random_brackets()
