@@ -256,13 +256,16 @@ def check_any_players_match():
             if all([choice in choiceB for choice in choiceA]):
                 print(f"{playerA} and {playerB} have the same choice of teams")
 
+
 def print_tabulate(header: Tuple[str], data: List[Tuple]):
     """
     Print a list of information in a nice tabulated form
     """
     assert len(header) == len(data[0])
     # First, calculate the maximum width for each column
-    col_widths = [max(len(str(row[i])) for row in data + [header]) for i in range(len(header))]
+    col_widths = [
+        max(len(str(row[i])) for row in data + [header]) for i in range(len(header))
+    ]
 
     # Print the header
     header_str_list = [f"{header[i]:<{col_widths[i]}}" for i in range(len(header))]
@@ -351,11 +354,10 @@ def compute_score_from_bracket(
         # act on m
         teamA = m.teamA.get_team()
         if teamA is not None:
-            wins_for_each_team[teamA] += m.winsA 
+            wins_for_each_team[teamA] += m.winsA
         teamB = m.teamB.get_team()
         if teamB is not None:
             wins_for_each_team[teamB] += m.winsB
-        
 
         # add more matchup's to the queue
         if type(m.teamA) == Matchup:
@@ -365,13 +367,14 @@ def compute_score_from_bracket(
     points = 0
     for choice in choices:
         points += wins_for_each_team[choice] * choice.points
-    
+
     # DEBUG
     # headers = ("Team", "Wins", "Points")
     # data = [ (team.name, wins_for_each_team[team], wins_for_each_team[team] * team.points) for team in choices]
     # print_tabulate(header=headers, data=data)
 
     return points
+
 
 def get_max_score_of_all_players():
     print(
@@ -403,14 +406,28 @@ def get_max_score_of_all_players():
         else:
             winning = "_"
         data.append(
-            (player, winning, current_score, best_score, best_opponent_player, best_opponent_score)
+            (
+                player,
+                winning,
+                current_score,
+                best_score,
+                best_opponent_player,
+                best_opponent_score,
+            )
         )
-    
+
     # sort by current score
     data.sort(key=lambda x: x[2], reverse=True)
     print_tabulate(
-        header=("player", "W", "Current Score", "Max Score", "Best Opponent", "Best Opponent Score"),
-        data=data
+        header=(
+            "player",
+            "W",
+            "Current Score",
+            "Max Score",
+            "Best Opponent",
+            "Best Opponent Score",
+        ),
+        data=data,
     )
 
 
@@ -462,6 +479,7 @@ def simulate_random_brackets():
 
     print(f"{simulations} random simulations results")
     print(player_wins)
+
 
 # def debug_scoring():
 #     player = "Jay"
