@@ -101,9 +101,9 @@ BRACKET_MATCHUP = Matchup(
             # 4,5
             winsB=0,
             teamB=Matchup(
-                winsA=2,
+                winsA=1,
                 teamA=Team.NUGGETS,
-                winsB=1,
+                winsB=2,
                 teamB=Team.CLIPPERS,
             ),
         ),
@@ -112,9 +112,9 @@ BRACKET_MATCHUP = Matchup(
             # 3,6
             winsA=0,
             teamA=Matchup(
-                winsA=2,
+                winsA=1,
                 teamA=Team.LAKERS,
-                winsB=1,
+                winsB=2,
                 teamB=Team.TIMBERWOLVES,
             ),
             # 2,7
@@ -256,6 +256,27 @@ def check_any_players_match():
             if all([choice in choiceB for choice in choiceA]):
                 print(f"{playerA} and {playerB} have the same choice of teams")
 
+def print_tabulate(header: Tuple[str], data: List[Tuple]):
+    """
+    Print a list of information in a nice tabulated form
+    """
+    assert len(header) == len(data[0])
+    # First, calculate the maximum width for each column
+    col_widths = [max(len(str(row[i])) for row in data + [header]) for i in range(len(header))]
+
+    # Print the header
+    header_str_list = [f"{header[i]:<{col_widths[i]}}" for i in range(len(header))]
+    header_str = "  ".join(header_str_list)
+    print(header_str)
+    print("-" * (sum(col_widths) + 6))
+
+    # Print each row
+    for row in data:
+        assert len(row) == len(header)
+        row_str_list = [f"{row[i]:<{col_widths[i]}}" for i in range(len(row))]
+        row_str = "  ".join(row_str_list)
+        print(row_str)
+
 
 def greedy_fill_bracket(bracket: Matchup, choices: Tuple[Team, Team, Team, Team]):
     if bracket.get_team() is not None:
@@ -316,53 +337,41 @@ def greedy_fill_bracket(bracket: Matchup, choices: Tuple[Team, Team, Team, Team]
 def compute_score_from_bracket(
     bracket: Matchup, choices: Tuple[Team, Team, Team, Team]
 ) -> int:
-    # search the tree and accumulates points for each favorable score
+    # search the tree and accumulates wins for team
     # bfs
     queue: List[Matchup] = []
     queue.append(bracket.teamA)
     queue.append(bracket.teamB)
-    points = 0
+
+    wins_for_each_team = {team: 0 for team in Team}
 
     while queue:
         m = queue.pop(0)
 
         # act on m
-        # add up points for teams that are apart of this player's choice
         teamA = m.teamA.get_team()
-        if teamA is not None and teamA in choices:
-            points += teamA.points * m.winsA
+        if teamA is not None:
+            wins_for_each_team[teamA] += m.winsA 
         teamB = m.teamB.get_team()
-        if teamB is not None and teamB in choices:
-            points += teamB.points * m.winsB
+        if teamB is not None:
+            wins_for_each_team[teamB] += m.winsB
+        
 
         # add more matchup's to the queue
         if type(m.teamA) == Matchup:
             queue.append(m.teamA)
             queue.append(m.teamB)
 
+    points = 0
+    for choice in choices:
+        points += wins_for_each_team[choice] * choice.points
+    
+    # DEBUG
+    # headers = ("Team", "Wins", "Points")
+    # data = [ (team.name, wins_for_each_team[team], wins_for_each_team[team] * team.points) for team in choices]
+    # print_tabulate(header=headers, data=data)
+
     return points
-
-def print_tabulate(header: Tuple[str], data: List[Tuple]):
-    """
-    Print a list of information in a nice tabulated form
-    """
-    assert len(header) == len(data[0])
-    # First, calculate the maximum width for each column
-    col_widths = [max(len(str(row[i])) for row in data + [header]) for i in range(len(header))]
-
-    # Print the header
-    header_str_list = [f"{header[i]:<{col_widths[i]}}" for i in range(len(header))]
-    header_str = "  ".join(header_str_list)
-    print(header_str)
-    print("-" * (sum(col_widths) + 6))
-
-    # Print each row
-    for row in data:
-        assert len(row) == len(header)
-        row_str_list = [f"{row[i]:<{col_widths[i]}}" for i in range(len(row))]
-        row_str = "  ".join(row_str_list)
-        print(row_str)
- 
 
 def get_max_score_of_all_players():
     print(
@@ -454,8 +463,14 @@ def simulate_random_brackets():
     print(f"{simulations} random simulations results")
     print(player_wins)
 
+# def debug_scoring():
+#     player = "Jay"
+#     score = compute_score_from_bracket(
+#         bracket=BRACKET_MATCHUP, choices=PLAYER_CHOICES[player]
+#     )
+#     print(f"{player} score: {score}")
 
 if __name__ == "__main__":
     check_any_players_match()
     get_max_score_of_all_players()
-    # simulate_random_brackets()
+    simulate_random_brackets()
