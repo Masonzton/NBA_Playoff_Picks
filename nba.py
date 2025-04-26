@@ -3,7 +3,7 @@ Just going to compute if it is even possible for a certain person to win it all
 """
 
 from enum import Enum
-from typing import Union, Tuple, List
+from typing import Union, Tuple, List, Dict
 from copy import deepcopy
 from functools import cached_property
 from random import choices as random_choice
@@ -337,9 +337,7 @@ def greedy_fill_bracket(bracket: Matchup, choices: Tuple[Team, Team, Team, Team]
             bracket.winsA = 3
 
 
-def compute_score_from_bracket(
-    bracket: Matchup, choices: Tuple[Team, Team, Team, Team]
-) -> int:
+def gather_wins_per_team(bracket: Matchup) -> Dict[Team, int]:
     # search the tree and accumulates wins for team
     # bfs
     queue: List[Matchup] = []
@@ -364,6 +362,13 @@ def compute_score_from_bracket(
             queue.append(m.teamA)
             queue.append(m.teamB)
 
+    return wins_for_each_team
+
+
+def compute_individual_score_from_bracket(
+    bracket: Matchup, choices: Tuple[Team, Team, Team, Team]
+) -> int:
+    wins_for_each_team = gather_wins_per_team(bracket=bracket)
     points = 0
     for choice in choices:
         points += wins_for_each_team[choice] * choice.points
@@ -376,6 +381,18 @@ def compute_score_from_bracket(
     return points
 
 
+def compute_all_scores_from_bracket(
+    bracket: Matchup, player_choices: Dict[str, Tuple[Team, Team, Team, Team]]
+) -> Dict[str, int]:
+    wins_for_each_team = gather_wins_per_team(bracket=bracket)
+    ret = {}
+    for player, choices in player_choices.items():
+        points = sum([(wins_for_each_team[team] * team.points) for team in choices])
+        ret[player] = points
+
+    return ret
+
+
 def get_max_score_of_all_players():
     print(
         "* means they can win in their best case scenario, _ means they don't happen to win in"
@@ -386,19 +403,23 @@ def get_max_score_of_all_players():
         ideal_bracket = deepcopy(BRACKET_MATCHUP)
         # depth first recursively fill out the bracket in a greedy way
         greedy_fill_bracket(ideal_bracket, choices)
-        best_score = compute_score_from_bracket(bracket=ideal_bracket, choices=choices)
+        best_score = compute_individual_score_from_bracket(
+            bracket=ideal_bracket, choices=choices
+        )
 
         best_opponent_player = None
         best_opponent_score = 0
         for playerO, choiceO in PLAYER_CHOICES.items():
             if playerO == player:
                 continue
-            scoreO = compute_score_from_bracket(bracket=ideal_bracket, choices=choiceO)
+            scoreO = compute_individual_score_from_bracket(
+                bracket=ideal_bracket, choices=choiceO
+            )
             if scoreO > best_opponent_score:
                 best_opponent_score = scoreO
                 best_opponent_player = playerO
 
-        current_score = compute_score_from_bracket(
+        current_score = compute_individual_score_from_bracket(
             bracket=BRACKET_MATCHUP, choices=choices
         )
         if best_score > best_opponent_score:
@@ -465,25 +486,30 @@ def simulate_random_brackets():
         bracket_copy = deepcopy(BRACKET_MATCHUP)
         random_uniform_bracket_fill(bracket_copy)
 
-        # TODO: implement a faster scoring function
         # TODO: account for ties
-        best_player = None
-        best_score = 0
-        for player, choices in PLAYER_CHOICES.items():
-            score = compute_score_from_bracket(bracket=bracket_copy, choices=choices)
-            if score > best_score:
-                best_score = score
-                best_player = player
-
+        player_scores = compute_all_scores_from_bracket(
+            bracket=bracket_copy, player_choices=PLAYER_CHOICES
+        )
+        best_player = max(player_scores, key=lambda x: player_scores.get(x))
         player_wins[best_player] += 1
 
-    print(f"{simulations} random simulations results")
-    print(player_wins)
+    print("\n \n")
+    print(f"******{simulations} random simulations results*****")
+    # print(player_wins)
+
+    headers = ("Player", "Wins", "Percentage %")
+    data = [
+        (player, wins, f"{100*wins/simulations:.1f}")
+        for player, wins in player_wins.items()
+    ]
+    # sort by number of wins in simulation
+    data.sort(key=lambda x: x[1], reverse=1)
+    print_tabulate(header=headers, data=data)
 
 
 # def debug_scoring():
 #     player = "Jay"
-#     score = compute_score_from_bracket(
+#     score = compute_individual_score_from_bracket(
 #         bracket=BRACKET_MATCHUP, choices=PLAYER_CHOICES[player]
 #     )
 #     print(f"{player} score: {score}")
