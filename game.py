@@ -1,3 +1,7 @@
+"""
+This stores the current state of the NBA playoffs, not the easiest to edit...
+"""
+
 from my_types import Team, Matchup
 
 # bracket breakdown
