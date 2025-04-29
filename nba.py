@@ -3,7 +3,7 @@ Just going to compute if it is even possible for a certain person to win it all
 """
 
 from enum import Enum
-from typing import Union, Tuple, List, Dict
+from typing import Union, Tuple, List, Dict, Literal
 from copy import deepcopy
 from functools import cached_property
 from random import choices as random_choice
@@ -45,6 +45,68 @@ class Team(Enum):
     def get_team(self) -> "Team":
         return self
 
+# Matchup odds between each two possible teams that can play together
+# -1 are filled out automatically based on reciprocal odds or are teams playing themselves
+# probability indicates odds that teamA on the left will beat teamB above. For example, Thunder have a 75% chance of beating grizzlies each game
+MATCHUP_ODDS = (
+ # (                THUNDER GRIZZLIES NUGGETS CLIPPERS LAKERS TIMBERWOLVES ROCKETS WARRIORS CAVALIERS HEAT PACERS BUCKS KNICKS PISTONS CELTICS MAGIC
+(Team.THUNDER,      -1,     0.75,     0.5,    0.5,     0.5,   0.5,         0.5,    0.5,     0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
+(Team.GRIZZLIES,    -1,     -1,       0.5,    0.5,     0.5,   0.5,         0.5,    0.5,     0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
+(Team.NUGGETS,      -1,     -1,       -1,     0.5,     0.5,   0.5,         0.5,    0.5,     0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
+(Team.CLIPPERS,     -1,     -1,       -1,     -1,      0.5,   0.5,         0.5,    0.5,     0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
+(Team.LAKERS,       -1,     -1,       -1,     -1,      -1,    0.5,         0.5,    0.5,     0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
+(Team.TIMBERWOLVES, -1,     -1,       -1,     -1,      -1,    -1,          0.5,    0.5,     0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
+(Team.ROCKETS,      -1,     -1,       -1,     -1,      -1,    -1,          -1,     0.5,     0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
+(Team.WARRIORS,     -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
+(Team.CAVALIERS,    -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
+(Team.HEAT,         -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       -1,  0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
+(Team.PACERS,       -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       -1,  -1,    0.5,  0.5,   0.5,    0.5,    0.5,),
+(Team.BUCKS,        -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       -1,  -1,    -1,   0.5,   0.5,    0.5,    0.5,),
+(Team.KNICKS,       -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       -1,  -1,    -1,   -1,    0.5,    0.5,    0.5,),
+(Team.PISTONS,      -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       -1,  -1,    -1,   -1,    -1,     0.5,    0.5,),
+(Team.CELTICS,      -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       -1,  -1,    -1,   -1,    -1,     -1,     0.5,),
+(Team.MAGIC,        -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       -1,  -1,    -1,   -1,    -1,     -1,     -1, ),
+)
+
+TEAMS_IN_ORDER = [
+    Team.THUNDER,
+    Team.GRIZZLIES,
+    Team.NUGGETS,
+    Team.CLIPPERS,
+    Team.LAKERS,
+    Team.TIMBERWOLVES,
+    Team.ROCKETS,
+    Team.WARRIORS,
+    Team.CAVALIERS,
+    Team.HEAT,
+    Team.PACERS,
+    Team.BUCKS,
+    Team.KNICKS,
+    Team.PISTONS,
+    Team.CELTICS,
+    Team.MAGIC,
+]
+
+TEAM_TO_INDEX = {team: idx for idx, team in enumerate(TEAMS_IN_ORDER)}
+
+def get_matchup_odds(teamA: Team, teamB: Team):
+    """
+    Get odds that teamA beats teamB
+    """
+    # note that we need to add 1 when accessing the second index due to the first entry being an enum
+    idxA = TEAM_TO_INDEX[teamA]
+    idxB = TEAM_TO_INDEX[teamB]
+    prob = MATCHUP_ODDS[idxA][idxB+1]
+    # if this is a negative one, then use the other side of the table 
+    if prob == -1:
+        prob = 1.0 - MATCHUP_ODDS[idxB][idxA+1]
+    
+    # probabilities should always be between 0 and 1
+    if not (prob >= 0.0 and prob <= 1.0):
+        breakpoint() 
+    assert prob >= 0.0
+    assert prob <= 1.0
+    return prob
 
 class Matchup:
     def __init__(
@@ -81,19 +143,35 @@ class Matchup:
         elif self.winsB == 4:
             self._winner = self.teamB.get_team()
         return self._winner
-
+    
+    def add_random_win(self):
+        # get the team from the matchup odds
+        teamA = self.teamA.get_team()
+        teamB = self.teamB.get_team()
+        # should never be calling this function if either side of the matchup is not determined
+        assert teamA is not None
+        assert teamB is not None
+        probability_A_win = get_matchup_odds(teamA=teamA, teamB=teamB)
+        
+        team = random_choice(population=['a', 'b'], weights=[probability_A_win, (1- probability_A_win)])[0]
+        if team == 'a':
+            self.winsA += 1
+        elif team == 'b':
+            self.winsB += 1
+        else:
+            raise ValueError(f"Unexpected random choice {team}")
 
 # bracket breakdown
 BRACKET_MATCHUP = Matchup(
     # west
     winsA=0,
     teamA=Matchup(
-        winsA=0,
+        winsA=0, #Thunder
         teamA=Matchup(
             # 1,8
             winsA=0,
             teamA=Matchup(
-                winsA=3,
+                winsA=4,
                 teamA=Team.THUNDER,
                 winsB=0,
                 teamB=Team.GRIZZLIES,
@@ -101,7 +179,7 @@ BRACKET_MATCHUP = Matchup(
             # 4,5
             winsB=0,
             teamB=Matchup(
-                winsA=1,
+                winsA=2,
                 teamA=Team.NUGGETS,
                 winsB=2,
                 teamB=Team.CLIPPERS,
@@ -114,7 +192,7 @@ BRACKET_MATCHUP = Matchup(
             teamA=Matchup(
                 winsA=1,
                 teamA=Team.LAKERS,
-                winsB=2,
+                winsB=3,
                 teamB=Team.TIMBERWOLVES,
             ),
             # 2,7
@@ -122,7 +200,7 @@ BRACKET_MATCHUP = Matchup(
             teamB=Matchup(
                 winsA=1,
                 teamA=Team.ROCKETS,
-                winsB=1,
+                winsB=2,
                 teamB=Team.WARRIORS,
             ),
         ),
@@ -135,7 +213,7 @@ BRACKET_MATCHUP = Matchup(
             # 1,8
             winsA=0,
             teamA=Matchup(
-                winsA=2,
+                winsA=3,
                 teamA=Team.CAVALIERS,
                 winsB=0,
                 teamB=Team.HEAT,
@@ -143,7 +221,7 @@ BRACKET_MATCHUP = Matchup(
             # 4,5
             winsB=0,
             teamB=Matchup(
-                winsA=2,
+                winsA=3,
                 teamA=Team.PACERS,
                 winsB=1,
                 teamB=Team.BUCKS,
@@ -154,7 +232,7 @@ BRACKET_MATCHUP = Matchup(
             # 3,6
             winsA=0,
             teamA=Matchup(
-                winsA=2,
+                winsA=3,
                 teamA=Team.KNICKS,
                 winsB=1,
                 teamB=Team.PISTONS,
@@ -162,7 +240,7 @@ BRACKET_MATCHUP = Matchup(
             # 2,7
             winsB=0,
             teamB=Matchup(
-                winsA=2,
+                winsA=3,
                 teamA=Team.CELTICS,
                 winsB=1,
                 teamB=Team.MAGIC,
@@ -395,7 +473,7 @@ def compute_all_scores_from_bracket(
 
 def get_max_score_of_all_players():
     print(
-        "* means they can win in their best case scenario, _ means they don't happen to win in"
+        "* means they can win in their best case scenario, _ means they don't happen to win in "
         "the scenario created. Not exhaustive"
     )
     data = []
@@ -432,8 +510,8 @@ def get_max_score_of_all_players():
                 winning,
                 current_score,
                 best_score,
-                best_opponent_player,
-                best_opponent_score,
+                # best_opponent_player,
+                # best_opponent_score,
             )
         )
 
@@ -445,8 +523,8 @@ def get_max_score_of_all_players():
             "W",
             "Current Score",
             "Max Score",
-            "Best Opponent",
-            "Best Opponent Score",
+            # "Best Opponent",
+            # "Best Opponent Score",
         ),
         data=data,
     )
@@ -475,16 +553,41 @@ def random_uniform_bracket_fill(bracket: Matchup):
     outcome = random_choice(population=options)
     bracket.winsA, bracket.winsB = outcome[0]
 
+def random_geometric_bracket_fill(bracket: Matchup):
+    if bracket.get_team() is not None:
+        # nothing to fill out since the bracket has it's winners already
+        return
+    elif type(bracket.teamA) == Matchup:
+        # fill out the left and right bracket's first if they are a matchup object
+        if bracket.teamA.get_team() is None:
+            random_geometric_bracket_fill(bracket=bracket.teamA)
+        if bracket.teamB.get_team() is None:
+            random_geometric_bracket_fill(bracket=bracket.teamB)
+    else:
+        # this is an unfilled out team thing
+        assert type(bracket.teamB) == Team
+        assert type(bracket.teamA) == Team
+
+    # keep on adding random wins until one team has won the matchup
+    # probabilities are determined from MATCHUP_ODDS array
+    while bracket.get_team() is None:
+        bracket.add_random_win()
+
 
 # Constructing all possible brackets is impossible when there are 15 games to play
 # and 8 different variations of point breakdown between the team. Or in other words
 # 8^15 or 10 trillion
-def simulate_random_brackets():
+def simulate_random_brackets(method: Literal["uniform", "geometric"]):
     player_wins = {player: 0 for player in PLAYER_CHOICES.keys()}
-    simulations = 10_000
+    simulations = 100_000
     for _ in range(simulations):
         bracket_copy = deepcopy(BRACKET_MATCHUP)
-        random_uniform_bracket_fill(bracket_copy)
+        if method == "uniform":
+            random_uniform_bracket_fill(bracket_copy)
+        elif method == "geometric":
+            random_geometric_bracket_fill(bracket_copy)
+        else:
+            raise NotImplementedError(f"{method} not implemented")
 
         # TODO: account for ties
         player_scores = compute_all_scores_from_bracket(
@@ -494,7 +597,7 @@ def simulate_random_brackets():
         player_wins[best_player] += 1
 
     print("\n \n")
-    print(f"******{simulations} random simulations results*****")
+    print(f"******{simulations} random {method} simulations results*****")
     # print(player_wins)
 
     headers = ("Player", "Wins", "Percentage %")
@@ -517,4 +620,5 @@ def simulate_random_brackets():
 if __name__ == "__main__":
     check_any_players_match()
     get_max_score_of_all_players()
-    simulate_random_brackets()
+    # simulate_random_brackets(method="uniform")
+    simulate_random_brackets(method="geometric")
