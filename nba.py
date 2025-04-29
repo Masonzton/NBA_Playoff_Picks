@@ -438,7 +438,7 @@ def sanity_checks():
 
     for idx, row in enumerate(MATCHUP_ODDS):
         # order of those matchup rows can not be changed
-        assert row[0] == TEAMS_IN_ORDER[idx].team_name
+        assert row[0] == TEAMS_IN_ORDER[idx].team_name, "MATCHUP_ODDS rows were re-arranged, that's not allowed since it's fragile..."
 
 
 def player_similarity():
