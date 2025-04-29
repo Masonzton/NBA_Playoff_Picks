@@ -37,19 +37,20 @@ But, I believe the bucks can pull it off!!!
 
 Results
 ---
+Last Ran 4/29/2025 8:33 am PST
 ```
 player      W  Current Score  Max Score
 ---------------------------------------
-Terminator  *  27             109      
-Jack        *  24             112      
-Gabe        *  24             103      
-Kunal       _  23             99       
-Jay         _  22             101      
-Mason       *  20             128      
-Mike        *  19             107      
-Gavin       *  18             82       
-Justin      *  17             96       
-Sean        *  14             129      
+Terminator  *  31             109      
+Jack        *  28             112      
+Gabe        *  28             103      
+Kunal       _  27             112      
+Jay         *  26             119      
+Mason       *  24             128      
+Mike        *  23             107      
+Gavin       *  23             82       
+Justin      *  21             96       
+Sean        _  18             81       
 Nick        *  12             82       
 
 How many teams each player has in common
@@ -86,19 +87,20 @@ KNICKS        2
 PISTONS       0       
 CELTICS       7       
 MAGIC         0       
- 
-******Running 100,000 random simulations using geometric method*****
-Player      Wins   Percentage %
----------------------------------
-Terminator  32694  32.7        
-Gabe        31194  31.2        
-Jack        13502  13.5        
-Kunal       6339   6.3         
-Jay         5855   5.9         
-Mason       4226   4.2         
-Justin      2728   2.7         
-Sean        2268   2.3         
-Mike        830    0.8         
-Nick        258    0.3         
-Gavin       106    0.1 
+
+******Running 1,000,000 random simulations using geometric method*****
+Player      Wins    Percentage %
+----------------------------------
+Terminator  364220  36.4        
+Gabe        309853  31.0        
+Jack        120666  12.1        
+Jay         71328   7.1         
+Kunal       55530   5.6         
+Mason       42425   4.2         
+Justin      26172   2.6         
+Mike        6703    0.7         
+Gavin       2003    0.2         
+Nick        1100    0.1         
+Sean        0       0.0         
+encountered 51767 ties or 5.2%
 ```

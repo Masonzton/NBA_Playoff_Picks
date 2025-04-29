@@ -43,7 +43,7 @@ BRACKET_MATCHUP = Matchup(
             teamB=Matchup(
                 winsA=1,
                 teamA=Team.ROCKETS,
-                winsB=2,
+                winsB=3,
                 teamB=Team.WARRIORS,
             ),
         ),
@@ -56,7 +56,7 @@ BRACKET_MATCHUP = Matchup(
             # 1,8
             winsA=0,
             teamA=Matchup(
-                winsA=3,
+                winsA=4,
                 teamA=Team.CAVALIERS,
                 winsB=0,
                 teamB=Team.HEAT,

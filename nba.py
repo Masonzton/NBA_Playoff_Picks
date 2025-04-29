@@ -347,7 +347,7 @@ def simulate_random_brackets(method: Literal["uniform", "geometric"]):
     """
     print("\n \n")
     print(
-        f"******Running {SIMULATION_TO_RUN} random simulations using {method} method*****"
+        f"******Running {SIMULATION_TO_RUN:,} random simulations using {method} method*****"
     )
     player_wins = {player: 0 for player in PLAYER_CHOICES.keys()}
     ties_amounts = 0
@@ -415,7 +415,7 @@ def simulate_random_brackets(method: Literal["uniform", "geometric"]):
     data.sort(key=lambda x: x[1], reverse=1)
     print_tabulate(header=headers, data=data)
     print(
-        f"encountered {ties_amounts} ties or {100 * ties_amounts/SIMULATION_TO_RUN:.1f}%"
+        f"encountered {ties_amounts:,} ties or {100 * ties_amounts/SIMULATION_TO_RUN:.1f}%"
     )
 
 
