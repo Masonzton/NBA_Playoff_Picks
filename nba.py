@@ -2,252 +2,12 @@
 Just going to compute if it is even possible for a certain person to win it all
 """
 
-from enum import Enum
-from typing import Union, Tuple, List, Dict, Literal
+from typing import Tuple, List, Dict, Literal
 from copy import deepcopy
-from functools import cached_property
 from random import choices as random_choice
-
-
-class Team(Enum):
-    THUNDER = ("THUNDER", 1)
-    GRIZZLIES = ("GRIZZLIES", 8)
-    NUGGETS = ("NUGGETS", 4)
-    CLIPPERS = ("CLIPPERS", 5)
-    LAKERS = ("LAKERS", 3)
-    TIMBERWOLVES = ("TIMBERWOLVES", 6)
-    ROCKETS = ("ROCKETS", 2)
-    WARRIORS = ("WARRIORS", 7)
-    CAVALIERS = ("CAVALIERS", 1)
-    HEAT = ("HEAT", 8)
-    PACERS = ("PACERS", 4)
-    BUCKS = ("BUCKS", 5)
-    KNICKS = ("KNICKS", 3)
-    PISTONS = ("PISTONS", 6)
-    CELTICS = ("CELTICS", 2)
-    MAGIC = ("MAGIC", 7)
-
-    def __init__(self, name: str, position: int):
-        self.team_name = name
-        self.position = position
-
-    @cached_property
-    def points(self) -> int:
-        if self.position <= 2:
-            return 1
-        elif self.position <= 4:
-            return 2
-        elif self.position <= 6:
-            return 3
-        elif self.position <= 8:
-            return 4
-
-    def get_team(self) -> "Team":
-        return self
-
-# Matchup odds between each two possible teams that can play together
-# -1 are filled out automatically based on reciprocal odds or are teams playing themselves
-# probability indicates odds that teamA on the left will beat teamB above. For example, Thunder have a 75% chance of beating grizzlies each game
-MATCHUP_ODDS = (
- # (                THUNDER GRIZZLIES NUGGETS CLIPPERS LAKERS TIMBERWOLVES ROCKETS WARRIORS CAVALIERS HEAT PACERS BUCKS KNICKS PISTONS CELTICS MAGIC
-(Team.THUNDER,      -1,     0.75,     0.5,    0.5,     0.5,   0.5,         0.5,    0.5,     0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
-(Team.GRIZZLIES,    -1,     -1,       0.5,    0.5,     0.5,   0.5,         0.5,    0.5,     0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
-(Team.NUGGETS,      -1,     -1,       -1,     0.5,     0.5,   0.5,         0.5,    0.5,     0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
-(Team.CLIPPERS,     -1,     -1,       -1,     -1,      0.5,   0.5,         0.5,    0.5,     0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
-(Team.LAKERS,       -1,     -1,       -1,     -1,      -1,    0.5,         0.5,    0.5,     0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
-(Team.TIMBERWOLVES, -1,     -1,       -1,     -1,      -1,    -1,          0.5,    0.5,     0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
-(Team.ROCKETS,      -1,     -1,       -1,     -1,      -1,    -1,          -1,     0.5,     0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
-(Team.WARRIORS,     -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      0.5,      0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
-(Team.CAVALIERS,    -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       0.5, 0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
-(Team.HEAT,         -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       -1,  0.5,   0.5,  0.5,   0.5,    0.5,    0.5,),
-(Team.PACERS,       -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       -1,  -1,    0.5,  0.5,   0.5,    0.5,    0.5,),
-(Team.BUCKS,        -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       -1,  -1,    -1,   0.5,   0.5,    0.5,    0.5,),
-(Team.KNICKS,       -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       -1,  -1,    -1,   -1,    0.5,    0.5,    0.5,),
-(Team.PISTONS,      -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       -1,  -1,    -1,   -1,    -1,     0.5,    0.5,),
-(Team.CELTICS,      -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       -1,  -1,    -1,   -1,    -1,     -1,     0.5,),
-(Team.MAGIC,        -1,     -1,       -1,     -1,      -1,    -1,          -1,     -1,      -1,       -1,  -1,    -1,   -1,    -1,     -1,     -1, ),
-)
-
-TEAMS_IN_ORDER = [
-    Team.THUNDER,
-    Team.GRIZZLIES,
-    Team.NUGGETS,
-    Team.CLIPPERS,
-    Team.LAKERS,
-    Team.TIMBERWOLVES,
-    Team.ROCKETS,
-    Team.WARRIORS,
-    Team.CAVALIERS,
-    Team.HEAT,
-    Team.PACERS,
-    Team.BUCKS,
-    Team.KNICKS,
-    Team.PISTONS,
-    Team.CELTICS,
-    Team.MAGIC,
-]
-
-TEAM_TO_INDEX = {team: idx for idx, team in enumerate(TEAMS_IN_ORDER)}
-
-def get_matchup_odds(teamA: Team, teamB: Team):
-    """
-    Get odds that teamA beats teamB
-    """
-    # note that we need to add 1 when accessing the second index due to the first entry being an enum
-    idxA = TEAM_TO_INDEX[teamA]
-    idxB = TEAM_TO_INDEX[teamB]
-    prob = MATCHUP_ODDS[idxA][idxB+1]
-    # if this is a negative one, then use the other side of the table 
-    if prob == -1:
-        prob = 1.0 - MATCHUP_ODDS[idxB][idxA+1]
-    
-    # probabilities should always be between 0 and 1
-    if not (prob >= 0.0 and prob <= 1.0):
-        breakpoint() 
-    assert prob >= 0.0
-    assert prob <= 1.0
-    return prob
-
-class Matchup:
-    def __init__(
-        self,
-        teamA: Union[Team, "Matchup"],
-        teamB: Union[Team, "Matchup"],
-        winsA: int,
-        winsB: int,
-    ):
-        self.teamA = teamA
-        self.teamB = teamB
-        self.winsA = winsA
-        self.winsB = winsB
-
-        # declare winner if a team has gotten 4 wins
-        if winsA == 4:
-            self._winner = teamA.get_team()
-        elif winsB == 4:
-            self._winner = teamB.get_team()
-        else:
-            self._winner = None
-
-        # update child matchup to point up. Idk why
-        self.parent = None
-        if type(teamA) == Matchup:
-            self.teamA.parent = self
-        if type(teamB) == Matchup:
-            self.teamB.parent = self
-
-    def get_team(self) -> "Team":
-        """Updates winner and returns winner"""
-        if self.winsA == 4:
-            self._winner = self.teamA.get_team()
-        elif self.winsB == 4:
-            self._winner = self.teamB.get_team()
-        return self._winner
-    
-    def add_random_win(self):
-        # get the team from the matchup odds
-        teamA = self.teamA.get_team()
-        teamB = self.teamB.get_team()
-        # should never be calling this function if either side of the matchup is not determined
-        assert teamA is not None
-        assert teamB is not None
-        probability_A_win = get_matchup_odds(teamA=teamA, teamB=teamB)
-        
-        team = random_choice(population=['a', 'b'], weights=[probability_A_win, (1- probability_A_win)])[0]
-        if team == 'a':
-            self.winsA += 1
-        elif team == 'b':
-            self.winsB += 1
-        else:
-            raise ValueError(f"Unexpected random choice {team}")
-
-# bracket breakdown
-BRACKET_MATCHUP = Matchup(
-    # west
-    winsA=0,
-    teamA=Matchup(
-        winsA=0, #Thunder
-        teamA=Matchup(
-            # 1,8
-            winsA=0,
-            teamA=Matchup(
-                winsA=4,
-                teamA=Team.THUNDER,
-                winsB=0,
-                teamB=Team.GRIZZLIES,
-            ),
-            # 4,5
-            winsB=0,
-            teamB=Matchup(
-                winsA=2,
-                teamA=Team.NUGGETS,
-                winsB=2,
-                teamB=Team.CLIPPERS,
-            ),
-        ),
-        winsB=0,
-        teamB=Matchup(
-            # 3,6
-            winsA=0,
-            teamA=Matchup(
-                winsA=1,
-                teamA=Team.LAKERS,
-                winsB=3,
-                teamB=Team.TIMBERWOLVES,
-            ),
-            # 2,7
-            winsB=0,
-            teamB=Matchup(
-                winsA=1,
-                teamA=Team.ROCKETS,
-                winsB=2,
-                teamB=Team.WARRIORS,
-            ),
-        ),
-    ),
-    # east
-    winsB=0,
-    teamB=Matchup(
-        winsA=0,
-        teamA=Matchup(
-            # 1,8
-            winsA=0,
-            teamA=Matchup(
-                winsA=3,
-                teamA=Team.CAVALIERS,
-                winsB=0,
-                teamB=Team.HEAT,
-            ),
-            # 4,5
-            winsB=0,
-            teamB=Matchup(
-                winsA=3,
-                teamA=Team.PACERS,
-                winsB=1,
-                teamB=Team.BUCKS,
-            ),
-        ),
-        winsB=0,
-        teamB=Matchup(
-            # 3,6
-            winsA=0,
-            teamA=Matchup(
-                winsA=3,
-                teamA=Team.KNICKS,
-                winsB=1,
-                teamB=Team.PISTONS,
-            ),
-            # 2,7
-            winsB=0,
-            teamB=Matchup(
-                winsA=3,
-                teamA=Team.CELTICS,
-                winsB=1,
-                teamB=Team.MAGIC,
-            ),
-        ),
-    ),
-)
+from config import MATCHUP_ODDS, SIMULATION_TO_RUN
+from my_types import Team, TEAMS_IN_ORDER, Matchup
+from game import BRACKET_MATCHUP
 
 PLAYER_CHOICES = {
     "Justin": (
@@ -553,6 +313,7 @@ def random_uniform_bracket_fill(bracket: Matchup):
     outcome = random_choice(population=options)
     bracket.winsA, bracket.winsB = outcome[0]
 
+
 def random_geometric_bracket_fill(bracket: Matchup):
     if bracket.get_team() is not None:
         # nothing to fill out since the bracket has it's winners already
@@ -578,9 +339,10 @@ def random_geometric_bracket_fill(bracket: Matchup):
 # and 8 different variations of point breakdown between the team. Or in other words
 # 8^15 or 10 trillion
 def simulate_random_brackets(method: Literal["uniform", "geometric"]):
+    print("\n \n")
+    print(f"******Running {SIMULATION_TO_RUN} random simulations*****")
     player_wins = {player: 0 for player in PLAYER_CHOICES.keys()}
-    simulations = 100_000
-    for _ in range(simulations):
+    for _ in range(SIMULATION_TO_RUN):
         bracket_copy = deepcopy(BRACKET_MATCHUP)
         if method == "uniform":
             random_uniform_bracket_fill(bracket_copy)
@@ -596,13 +358,9 @@ def simulate_random_brackets(method: Literal["uniform", "geometric"]):
         best_player = max(player_scores, key=lambda x: player_scores.get(x))
         player_wins[best_player] += 1
 
-    print("\n \n")
-    print(f"******{simulations} random {method} simulations results*****")
-    # print(player_wins)
-
     headers = ("Player", "Wins", "Percentage %")
     data = [
-        (player, wins, f"{100*wins/simulations:.1f}")
+        (player, wins, f"{100*wins/SIMULATION_TO_RUN:.1f}")
         for player, wins in player_wins.items()
     ]
     # sort by number of wins in simulation
@@ -617,8 +375,22 @@ def simulate_random_brackets(method: Literal["uniform", "geometric"]):
 #     )
 #     print(f"{player} score: {score}")
 
-if __name__ == "__main__":
+
+def sanity_checks():
     check_any_players_match()
+
+    if SIMULATION_TO_RUN > 10_000:
+        time_to_run = int((SIMULATION_TO_RUN / 10_000) * 2)
+        print(
+            f"WARNING: Doing {SIMULATION_TO_RUN} simulations will take at least {time_to_run} seconds. Consider using a smaller number of runs"
+        )
+
+    for idx, row in enumerate(MATCHUP_ODDS):
+        # order of those matchup rows can not be changed
+        assert row[0] == TEAMS_IN_ORDER[idx].team_name
+
+
+if __name__ == "__main__":
+    sanity_checks()
     get_max_score_of_all_players()
-    # simulate_random_brackets(method="uniform")
     simulate_random_brackets(method="geometric")

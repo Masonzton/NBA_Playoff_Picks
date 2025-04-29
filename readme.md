@@ -1,3 +1,5 @@
+Rules of the game
+---
 The NBA playoff bracket game I am playing is as follows. 
 Each participant is to pick 4 teams. Each team you pick will get your points for each game won according to their seed
 - 1st and 2nd seed teams 1 points
@@ -9,12 +11,15 @@ Picks of teams will be in order. The tie breaker is based on who's first choice 
 
 For example, if you choose a 3rd seed team and they win 4 of the games in the first round but only 2 of the games in the second round, they would win you (6 games) * (2 points per game) = 12 points
 
-The nba.py script is meant to determine if at any point a player is "out" meaning that they there is no possible combination of wins that will secure a first place victory for them.
+Basic Usage
+---
+You must have python installed and then you can just run
 
-For the first round, it is isn't feasible or necessary to iterate over all 8^15 ~ 10 trillion potential brackets.
-Instead a monte carlo like or random simulation is employed to confirm that indeed any person has the possibility to win.
-You can also get a sense of the distribution of how many different ways each person could win. However, this heavily favors people who picked lower seed teams since it doesn't consider the lower chances of them winning games vs the extra points won.
+```python3 nba.py```
 
-Later, I will iterate over all possible brackets when there are less games to play.
+You can edit ```config.py``` to set the odds for each possible matchup yourself. All odds default to 50/50.
 
-I also computed the maximum score each person and see if they are winning the bracket in that best case situation.
+Running the script will make 10,000 copies of the current bracket, simulate every single matchup according to the odds selected, and keep a running total of who wins each simulated bracket.
+In the earlier rounds it is not feasible to calculate all 8^15 ~ 10 trillion brackets, but maybe later I will do a more exhaustive approach.
+
+Maximum scores are also computed
