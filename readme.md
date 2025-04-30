@@ -37,21 +37,21 @@ But, I believe the bucks can pull it off!!!
 
 Results
 ---
-Last Ran 4/29/2025 8:33 am PST
+Last Ran 4/29/2025 11:00 pm PST
 ```
 player      W  Current Score  Max Score
 ---------------------------------------
+Gabe        *  31             103      
 Terminator  *  31             109      
-Jack        *  28             112      
-Gabe        *  28             103      
-Kunal       _  27             112      
+Jack        *  30             112      
+Kunal       _  28             112      
 Jay         *  26             119      
-Mason       *  24             128      
-Mike        *  23             107      
-Gavin       *  23             82       
-Justin      *  21             96       
+Mason       _  25             96       
+Justin      *  24             96       
+Mike        *  24             107      
+Gavin       *  24             82       
 Sean        _  18             81       
-Nick        *  12             82       
+Nick        _  13             50       
 
 How many teams each player has in common
 Player      Justin  Jack  Kunal  Nick  Gabe  Mike  Mason  Jay  Sean  Gavin  Terminator
@@ -91,16 +91,32 @@ MAGIC         0
 ******Running 1,000,000 random simulations using geometric method*****
 Player      Wins    Percentage %
 ----------------------------------
-Terminator  364220  36.4        
-Gabe        309853  31.0        
-Jack        120666  12.1        
-Jay         71328   7.1         
-Kunal       55530   5.6         
-Mason       42425   4.2         
-Justin      26172   2.6         
-Mike        6703    0.7         
-Gavin       2003    0.2         
-Nick        1100    0.1         
+Gabe        510819  51.1        
+Terminator  235688  23.6        
+Jack        109069  10.9        
+Jay         50917   5.1         
+Justin      47904   4.8         
+Kunal       36300   3.6         
+Mike        5479    0.5         
+Gavin       3824    0.4         
+Nick        0       0.0         
+Mason       0       0.0         
 Sean        0       0.0         
-encountered 51767 ties or 5.2%
+encountered 49,323 ties or 4.9%
+
+Without Terminator
+******Running 1,000,000 random simulations using geometric method*****
+Player  Wins    Percentage %
+------------------------------
+Gabe    622917  62.3        
+Jack    176395  17.6        
+Kunal   86374   8.6         
+Jay     55898   5.6         
+Justin  47803   4.8         
+Mike    5941    0.6         
+Gavin   4672    0.5         
+Nick    0       0.0         
+Mason   0       0.0         
+Sean    0       0.0         
+encountered 37,377 ties or 3.7%
 ```
