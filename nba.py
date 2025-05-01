@@ -76,12 +76,12 @@ PLAYER_CHOICES = {
         Team.CAVALIERS,
         Team.WARRIORS,
     ),
-    "Terminator": (
-        Team.TIMBERWOLVES,
-        Team.WARRIORS,
-        Team.THUNDER,
-        Team.CLIPPERS,
-    ),
+    # "Terminator": (
+    #     Team.TIMBERWOLVES,
+    #     Team.WARRIORS,
+    #     Team.THUNDER,
+    #     Team.CLIPPERS,
+    # ),
 }
 
 
@@ -338,12 +338,15 @@ def random_geometric_bracket_fill(bracket: Matchup):
 # Constructing all possible brackets is impossible when there are 15 games to play
 # and 8 different variations of point breakdown between the team. Or in other words
 # 8^15 or 10 trillion
-def simulate_random_brackets(method: Literal["uniform", "geometric"]):
+def simulate_random_brackets(method: Literal["uniform", "geometric"], aggregate_ranking: bool = False):
     """
     Simulate different bracket combinations. Geometric will use the odds prescribed in the
     MATCHUP_ODDS which is useful for realistic odds, uniform will just choose a random outcome for
     every series, which is useful for trying more options / trying to find the outcome that secures a win
     for a player.
+
+    Args:
+        aggregate_ranking: collect metrics on distribution of rankings and matchup between players
     """
     print("\n \n")
     print(
@@ -351,6 +354,13 @@ def simulate_random_brackets(method: Literal["uniform", "geometric"]):
     )
     player_wins = {player: 0 for player in PLAYER_CHOICES.keys()}
     ties_amounts = 0
+
+
+    if aggregate_ranking:
+        player_list = list(PLAYER_CHOICES.keys())
+        wins_against_other_players = {player1: {player2: 0 for player2 in player_list} for player1 in player_list}
+        player_ranking_distribution = {player: [0 for _ in player_list]  for player in player_list}
+
     for _ in range(SIMULATION_TO_RUN):
         bracket_copy = deepcopy(BRACKET_MATCHUP)
         if method == "uniform":
@@ -399,12 +409,20 @@ def simulate_random_brackets(method: Literal["uniform", "geometric"]):
         else:
             best_player = best_players[0]
 
-        # best_player = max(player_scores, key=lambda x: player_scores.get(x))
-        # # check if there is a tie
-        # tied_players = [player for player in PLAYER_CHOICES.keys() if player_scores[player] == player_scores[best_player] and player != best_player ]
-        # if tied_players:
-        #     ties_amounts += 1
         player_wins[best_player] += 1
+        
+        if aggregate_ranking:
+            for player_one in player_list:
+                for player_two in player_list:
+                    if player_scores[player_one] > player_scores[player_two]:
+                        wins_against_other_players[player_one][player_two] += 1
+            player_scores_list = [(player, score) for player, score in player_scores.items()]
+            player_scores_list.sort(key=lambda x: x[1], reverse=True)
+            assert player_scores_list[0][1] >= player_scores_list[1][1]
+            for idx, value in enumerate(player_scores_list):
+                player, _ = value
+                player_ranking_distribution[player][idx] += 1
+
 
     headers = ("Player", "Wins", "Percentage %")
     data = [
@@ -417,6 +435,17 @@ def simulate_random_brackets(method: Literal["uniform", "geometric"]):
     print(
         f"encountered {ties_amounts:,} ties or {100 * ties_amounts/SIMULATION_TO_RUN:.1f}%"
     )
+
+    if aggregate_ranking:
+        print("\n\nWhat % of times each player wins against another player, useful for seeing which player 'knocked out' each other")
+        header_ag = ["Player"] + player_list
+        data = [ [player1] + [f"{100*wins_against_other_players[player1][player2]/SIMULATION_TO_RUN:.1f}" for player2 in player_list] for player1 in player_list]
+        print_tabulate(header_ag, data)
+
+        print("\n\nDistribution of ranking for each player")
+        header = ["Player"] + [i+1 for i in range(len(player_list))]
+        data = [ [player] + [f"{100*player_ranking_distribution[player][idx]/SIMULATION_TO_RUN:.1f}" for idx in range(len(player_list))] for player in player_list]
+        print_tabulate(header, data)
 
 
 # def debug_scoring():
@@ -475,6 +504,6 @@ def team_choice():
 if __name__ == "__main__":
     sanity_checks()
     get_max_score_of_all_players()
-    player_similarity()
-    team_choice()
-    simulate_random_brackets(method="geometric")
+    # player_similarity()
+    # team_choice()
+    simulate_random_brackets(method="geometric", aggregate_ranking=True)
