@@ -448,14 +448,6 @@ def simulate_random_brackets(method: Literal["uniform", "geometric"], aggregate_
         print_tabulate(header, data)
 
 
-# def debug_scoring():
-#     player = "Jay"
-#     score = compute_individual_score_from_bracket(
-#         bracket=BRACKET_MATCHUP, choices=PLAYER_CHOICES[player]
-#     )
-#     print(f"{player} score: {score}")
-
-
 def sanity_checks():
     check_any_players_match()
 
@@ -506,4 +498,4 @@ if __name__ == "__main__":
     get_max_score_of_all_players()
     # player_similarity()
     # team_choice()
-    simulate_random_brackets(method="geometric", aggregate_ranking=True)
+    simulate_random_brackets(method="geometric", aggregate_ranking=False)
