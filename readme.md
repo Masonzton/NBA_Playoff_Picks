@@ -37,34 +37,37 @@ But, I believe the bucks can pull it off!!!
 
 Results
 ---
-Last Ran 5/4/2025 3:44 pm PST
+Last Ran 5/7/2025 8:59 pm PST
 I removed the terminator to see the odds without it
 ```
-player  W  Current Score  Max Score
------------------------------------
-Gabe    *  36             103      
-Jack    *  33             92       
-Kunal   *  33             88       
-Jay     _  31             83       
-Mason   _  28             72       
-Mike    _  27             71       
-Justin  _  26             84       
-Gavin   *  24             82       
-Sean    _  21             57       
-Nick    _  13             29       
+player      W  Current Score  Max Score
+---------------------------------------
+Gabe        *  46             122      
+Jack        *  45             114      
+Kunal       *  45             110      
+Terminator  _  45             105      
+Jay         _  43             105      
+Justin      _  36             103      
+Mason       _  36             91       
+Mike        _  35             90       
+Gavin       _  32             101      
+Sean        _  29             73       
+Nick        _  13             36       
 
-******Running 1,000,000 random simulations using geometric method*****
-Player  Wins    Percentage %
-------------------------------
-Gabe    849032  84.9        
-Jack    95654   9.6         
-Kunal   52901   5.3         
-Gavin   2413    0.2         
-Justin  0       0.0         
-Nick    0       0.0         
-Mike    0       0.0         
-Mason   0       0.0         
-Jay     0       0.0         
-Sean    0       0.0         
-encountered 23,733 ties or 2.4%
+
+******Running 10,000 random simulations using geometric method*****
+Player      Wins  Percentage %
+--------------------------------
+Gabe        5734  57.3        
+Jack        1811  18.1        
+Kunal       1415  14.2        
+Terminator  1028  10.3        
+Gavin       12    0.1         
+Justin      0     0.0         
+Nick        0     0.0         
+Mike        0     0.0         
+Mason       0     0.0         
+Jay         0     0.0         
+Sean        0     0.0         
+encountered 396 ties or 4.0%
 ```

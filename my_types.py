@@ -1,9 +1,11 @@
-from enum import Enum
+from enum import Enum, auto
 from typing import Union
 from random import choices as random_choice
 from functools import cached_property
 from config import MATCHUP_ODDS
 
+
+times_index_is_called = 0
 
 class Team(Enum):
     THUNDER = ("THUNDER", 1)
@@ -37,6 +39,20 @@ class Team(Enum):
             return 3
         elif self.position <= 8:
             return 4
+
+    @cached_property
+    def index(self) -> int:
+        global times_index_is_called
+        length_of_class = len(list(self.__class__))
+        times_index_is_called += 1
+        value = list(self.__class__).index(self)
+        assert value >= 0
+        assert value < length_of_class
+        assert times_index_is_called <= length_of_class
+        return value
+    
+    def debug_print(self) -> int:
+        print(times_index_is_called)
 
     def get_team(self) -> "Team":
         return self

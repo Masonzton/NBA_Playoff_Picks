@@ -1,5 +1,5 @@
 # how many times to run the simulation. takes about 2 seconds per 10_000 simulations
-SIMULATION_TO_RUN = 1_000_000
+SIMULATION_TO_RUN = 10_000
 
 # Matchup odds between each two possible teams that can play together
 # -1 are filled out automatically based on reciprocal odds or are teams playing themselves

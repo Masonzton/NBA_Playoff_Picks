@@ -10,12 +10,6 @@ from my_types import Team, TEAMS_IN_ORDER, Matchup
 from game import BRACKET_MATCHUP
 
 PLAYER_CHOICES = {
-    "Justin": (
-        Team.CELTICS,
-        Team.LAKERS,
-        Team.WARRIORS,
-        Team.NUGGETS,
-    ),
     "Jack": (
         Team.THUNDER,
         Team.WARRIORS,
@@ -28,28 +22,34 @@ PLAYER_CHOICES = {
         Team.WARRIORS,
         Team.KNICKS,
     ),
-    "Nick": (
-        Team.THUNDER,
-        Team.CELTICS,
-        Team.LAKERS,
-        Team.BUCKS,
-    ),
     "Gabe": (
         Team.WARRIORS,
         Team.TIMBERWOLVES,
         Team.NUGGETS,
         Team.CELTICS,
     ),
+    "Gavin": (
+        Team.THUNDER,
+        Team.CELTICS,
+        Team.CAVALIERS,
+        Team.WARRIORS,
+    ),
+    "Justin": (
+        Team.CELTICS,
+        Team.LAKERS,
+        Team.WARRIORS,
+        Team.NUGGETS,
+    ),
+    "Nick": (
+        Team.THUNDER,
+        Team.CELTICS,
+        Team.LAKERS,
+        Team.BUCKS,
+    ),
     "Mike": (
         Team.LAKERS,
         Team.CLIPPERS,
         Team.WARRIORS,
-        Team.CELTICS,
-    ),
-    "Mason": (
-        Team.WARRIORS,
-        Team.CLIPPERS,
-        Team.BUCKS,
         Team.CELTICS,
     ),
     "Mason": (
@@ -70,18 +70,12 @@ PLAYER_CHOICES = {
         Team.HEAT,
         Team.GRIZZLIES,
     ),
-    "Gavin": (
-        Team.THUNDER,
-        Team.CELTICS,
-        Team.CAVALIERS,
+    "Terminator": (
+        Team.TIMBERWOLVES,
         Team.WARRIORS,
+        Team.THUNDER,
+        Team.CLIPPERS,
     ),
-    # "Terminator": (
-    #     Team.TIMBERWOLVES,
-    #     Team.WARRIORS,
-    #     Team.THUNDER,
-    #     Team.CLIPPERS,
-    # ),
 }
 
 
@@ -179,8 +173,7 @@ def gather_wins_per_team(bracket: Matchup) -> Dict[Team, int]:
     # search the tree and accumulates wins for team
     # bfs
     queue: List[Matchup] = []
-    queue.append(bracket.teamA)
-    queue.append(bracket.teamB)
+    queue.append(bracket)
 
     wins_for_each_team = {team: 0 for team in Team}
 
@@ -221,14 +214,15 @@ def compute_individual_score_from_bracket(
 
 def compute_all_scores_from_bracket(
     bracket: Matchup, player_choices: Dict[str, Tuple[Team, Team, Team, Team]]
-) -> Dict[str, int]:
+) -> Tuple[Dict[str, int], Dict[Team, int]]:
+    """Return scores dict plus wins per team dictionary"""
     wins_for_each_team = gather_wins_per_team(bracket=bracket)
     ret = {}
     for player, choices in player_choices.items():
         points = sum([(wins_for_each_team[team] * team.points) for team in choices])
         ret[player] = points
 
-    return ret
+    return ret, wins_for_each_team
 
 
 def get_max_score_of_all_players():
@@ -334,11 +328,26 @@ def random_geometric_bracket_fill(bracket: Matchup):
     while bracket.get_team() is None:
         bracket.add_random_win()
 
+ELIMINATED_TEAMS = [
+    Team.GRIZZLIES,
+    Team.CLIPPERS,
+    Team.LAKERS,
+    Team.HEAT,
+    Team.BUCKS,
+    Team.PISTONS,
+    Team.MAGIC,
+    Team.ROCKETS,
+    Team.WARRIORS,
+]
 
 # Constructing all possible brackets is impossible when there are 15 games to play
 # and 8 different variations of point breakdown between the team. Or in other words
 # 8^15 or 10 trillion
-def simulate_random_brackets(method: Literal["uniform", "geometric"], aggregate_ranking: bool = False):
+def simulate_random_brackets(
+    method: Literal["uniform", "geometric"],
+    aggregate_ranking: bool = False,
+    aggregate_vectors: bool = False
+):
     """
     Simulate different bracket combinations. Geometric will use the odds prescribed in the
     MATCHUP_ODDS which is useful for realistic odds, uniform will just choose a random outcome for
@@ -360,6 +369,12 @@ def simulate_random_brackets(method: Literal["uniform", "geometric"], aggregate_
         player_list = list(PLAYER_CHOICES.keys())
         wins_against_other_players = {player1: {player2: 0 for player2 in player_list} for player1 in player_list}
         player_ranking_distribution = {player: [0 for _ in player_list]  for player in player_list}
+    
+    if aggregate_vectors:
+        MAX_TEAM_WINS = 10_000 # nonsense high number
+        MIN_TEAM_WINS = 0
+        player_vectors_min = {player: [MAX_TEAM_WINS for _ in Team] for player in PLAYER_CHOICES.keys()}
+        player_vectors_max = {player: [MIN_TEAM_WINS for _ in Team] for player in PLAYER_CHOICES.keys()}
 
     for _ in range(SIMULATION_TO_RUN):
         bracket_copy = deepcopy(BRACKET_MATCHUP)
@@ -371,7 +386,7 @@ def simulate_random_brackets(method: Literal["uniform", "geometric"], aggregate_
             raise NotImplementedError(f"{method} not implemented")
 
         # TODO: account for ties
-        player_scores = compute_all_scores_from_bracket(
+        player_scores, wins_per_team = compute_all_scores_from_bracket(
             bracket=bracket_copy, player_choices=PLAYER_CHOICES
         )
         best_players = []
@@ -385,7 +400,6 @@ def simulate_random_brackets(method: Literal["uniform", "geometric"], aggregate_
 
         if len(best_players) > 1:
             ties_amounts += 1
-            wins_per_team = gather_wins_per_team(bracket=bracket_copy)
             # see if their first choice team has scored more points than theirs
             for idx in range(4):
                 best_sub_score = 0
@@ -410,6 +424,13 @@ def simulate_random_brackets(method: Literal["uniform", "geometric"], aggregate_
             best_player = best_players[0]
 
         player_wins[best_player] += 1
+
+        if aggregate_vectors:
+            wins_per_team_vector = [wins_per_team[team] for team in Team]
+            # for the best player, take mins and maxes across the vector
+            for index, _ in enumerate(Team):
+                player_vectors_max[best_player][index] = max(player_vectors_max[best_player][index], wins_per_team_vector[index])
+                player_vectors_min[best_player][index] = min(player_vectors_min[best_player][index], wins_per_team_vector[index])
         
         if aggregate_ranking:
             for player_one in player_list:
@@ -446,6 +467,16 @@ def simulate_random_brackets(method: Literal["uniform", "geometric"], aggregate_
         header = ["Player"] + [i+1 for i in range(len(player_list))]
         data = [ [player] + [f"{100*player_ranking_distribution[player][idx]/SIMULATION_TO_RUN:.1f}" for idx in range(len(player_list))] for player in player_list]
         print_tabulate(header, data)
+    
+    if aggregate_vectors:
+        for player in PLAYER_CHOICES.keys():
+            print(player)
+            for idx, team in enumerate(Team):
+                if team in ELIMINATED_TEAMS:
+                    continue
+                print(f"{team}: min: {player_vectors_min[player][idx]} max: {player_vectors_max[player][idx]}")
+        # print(f"max: {player_vectors_max}")
+        # print(f"min: {player_vectors_min}")
 
 
 def sanity_checks():
@@ -498,4 +529,4 @@ if __name__ == "__main__":
     get_max_score_of_all_players()
     # player_similarity()
     # team_choice()
-    simulate_random_brackets(method="geometric", aggregate_ranking=False)
+    simulate_random_brackets(method="geometric", aggregate_ranking=False, aggregate_vectors=False)
