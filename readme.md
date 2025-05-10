@@ -53,20 +53,18 @@ Gavin       _  34             101
 Sean        _  29             73       
 Nick        _  14             36       
 
-
-******Running 1,000,000 random simulations using geometric method*****
+460,800 possible brackets left
 Player      Wins    Percentage %
 ----------------------------------
-Gabe        678427  67.8        
-Terminator  128527  12.9        
-Jack        106441  10.6        
-Kunal       86238   8.6         
-Gavin       367     0.0         
+Gabe        305239  66.2        
+Terminator  65795   14.3        
+Jack        50247   10.9        
+Kunal       39007   8.5         
+Gavin       512     0.1         
 Justin      0       0.0         
 Nick        0       0.0         
 Mike        0       0.0         
 Mason       0       0.0         
 Jay         0       0.0         
-Sean        0       0.0         
-encountered 41,473 ties or 4.1%
+Sean        0       0.0
 ```

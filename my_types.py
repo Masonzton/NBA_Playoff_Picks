@@ -112,10 +112,11 @@ class Matchup:
 
     def get_team(self) -> "Team":
         """Updates winner and returns winner"""
-        if self.winsA == 4:
-            self._winner = self.teamA.get_team()
-        elif self.winsB == 4:
-            self._winner = self.teamB.get_team()
+        if self._winner is None:
+            if self.winsA == 4:
+                self._winner = self.teamA.get_team()
+            elif self.winsB == 4:
+                self._winner = self.teamB.get_team()
         return self._winner
 
     def add_random_win(self):

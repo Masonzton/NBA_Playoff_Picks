@@ -3,11 +3,12 @@ Just going to compute if it is even possible for a certain person to win it all
 """
 
 from typing import Tuple, List, Dict, Literal
-from copy import deepcopy
+from copy import deepcopy, copy
 from random import choices as random_choice
 from config import MATCHUP_ODDS, SIMULATION_TO_RUN
 from my_types import Team, TEAMS_IN_ORDER, Matchup
 from game import BRACKET_MATCHUP
+import itertools
 
 PLAYER_CHOICES = {
     "Jack": (
@@ -340,6 +341,122 @@ ELIMINATED_TEAMS = [
     Team.WARRIORS,
 ]
 
+def set_wins_by_match_id(root: Matchup, id: List[int], winsA: int, winsB: int):
+    id_list = copy(id)
+    matchup = root
+    while id_list:
+        if id_list[0] == 0:
+            matchup = matchup.teamA
+        elif id_list[0] == 1:
+            matchup = matchup.teamB
+        else:
+            raise ValueError(f"unexpected value {id_list[0]}")
+        id_list.pop(0)
+    
+    assert winsA >= matchup.winsA
+    assert winsB >= matchup.winsB
+    assert (winsA == 4) or (winsB == 4)
+    assert matchup.get_team() is None
+    matchup.winsA = winsA
+    matchup.winsB = winsB
+
+def get_possibility_list_from_matchup(matchup: Matchup) -> List[Tuple[int, int]]:
+    # A wins
+    a_win_options = [(4, b) for b in range(matchup.winsB, 4)]  # b can win up to 3 times
+    b_win_options = [(a, 4) for a in range(matchup.winsA, 4)]  # a can win up to 3 times
+    return a_win_options + b_win_options
+
+def get_best_player(player_scores, wins_per_team):
+    best_players = []
+    best_score = 0
+    for player, score in player_scores.items():
+        if score > best_score:
+            best_players = [player]
+            best_score = score
+        elif score == best_score:
+            best_players.append(player)
+
+    if len(best_players) > 1:
+        # ties_amounts += 1
+        # see if their first choice team has scored more points than theirs
+        for idx in range(4):
+            best_sub_score = 0
+            best_sub_players = []
+            for player in best_players:
+                choice = PLAYER_CHOICES[player]
+                team = choice[idx]
+                sub_score = team.points * wins_per_team[team]
+                if sub_score > best_sub_score:
+                    best_sub_players = [player]
+                    best_score = sub_score
+                elif sub_score == best_sub_score:
+                    best_sub_players.append(player)
+            if len(best_sub_players) > 1:
+                best_players = best_sub_players
+            else:
+                best_player = best_sub_players[0]
+                break
+        else:
+            assert False, "should have found a best player in the tie scenario"
+    else:
+        best_player = best_players[0]
+    
+    return best_player
+
+def play_all_scenarios():
+    """
+    Enumerate all possibilities
+    """
+
+    to_visit: List[Tuple[List[int], Matchup]] = [([], BRACKET_MATCHUP)]
+
+    game_list: List[Tuple[List[int], List[Tuple[int, int]]]] = []
+
+    while to_visit:
+        node_id, node = to_visit.pop(0)
+        # process node
+        if node.get_team() is None:
+            # add to the games_list
+            game_list.append((node_id, get_possibility_list_from_matchup(node)))
+
+            # add more nodes to visit
+            to_visit.append((node_id + [0], node.teamA))
+            to_visit.append((node_id + [1], node.teamB))
+
+    game_comb : List[List[Tuple[int, int]]] = [t[1] for t in game_list]
+    total_outcomes = 0
+
+    wins_per_player = {player: 0 for player in PLAYER_CHOICES.keys()}
+    for all_outcomes in itertools.product(*game_comb):
+        bracket_copy = deepcopy(BRACKET_MATCHUP)
+        for idx, game_outcome in enumerate(all_outcomes):
+            game_id = game_list[idx][0]
+            set_wins_by_match_id(bracket_copy, game_id, game_outcome[0], game_outcome[1])
+        assert bracket_copy.get_team() is not None
+
+        player_scores, wins_per_team = compute_all_scores_from_bracket(
+            bracket=bracket_copy, player_choices=PLAYER_CHOICES
+        )
+        best_player = get_best_player(
+            player_scores=player_scores,
+            wins_per_team=wins_per_team
+        )
+        wins_per_player[best_player] += 1
+        total_outcomes += 1
+
+
+    print(f"{total_outcomes:,} possible brackets left")
+
+    headers = ("Player", "Wins", "Percentage %")
+    data = [
+        (player, wins, f"{100*wins/total_outcomes:.1f}")
+        for player, wins in wins_per_player.items()
+    ]
+    # sort by number of wins in simulation
+    data.sort(key=lambda x: x[1], reverse=1)
+    print_tabulate(header=headers, data=data)
+
+
 # Constructing all possible brackets is impossible when there are 15 games to play
 # and 8 different variations of point breakdown between the team. Or in other words
 # 8^15 or 10 trillion
@@ -389,39 +506,8 @@ def simulate_random_brackets(
         player_scores, wins_per_team = compute_all_scores_from_bracket(
             bracket=bracket_copy, player_choices=PLAYER_CHOICES
         )
-        best_players = []
-        best_score = 0
-        for player, score in player_scores.items():
-            if score > best_score:
-                best_players = [player]
-                best_score = score
-            elif score == best_score:
-                best_players.append(player)
 
-        if len(best_players) > 1:
-            ties_amounts += 1
-            # see if their first choice team has scored more points than theirs
-            for idx in range(4):
-                best_sub_score = 0
-                best_sub_players = []
-                for player in best_players:
-                    choice = PLAYER_CHOICES[player]
-                    team = choice[idx]
-                    sub_score = team.points * wins_per_team[team]
-                    if sub_score > best_sub_score:
-                        best_sub_players = [player]
-                        best_score = sub_score
-                    elif sub_score == best_sub_score:
-                        best_sub_players.append(player)
-                if len(best_sub_players) > 1:
-                    best_players = best_sub_players
-                else:
-                    best_player = best_sub_players[0]
-                    break
-            else:
-                assert False, "should have found a best player in the tie scenario"
-        else:
-            best_player = best_players[0]
+        best_player = get_best_player(player_scores=player_scores, wins_per_team=wins_per_team)
 
         player_wins[best_player] += 1
 
@@ -526,7 +612,8 @@ def team_choice():
 
 if __name__ == "__main__":
     sanity_checks()
-    get_max_score_of_all_players()
+    # get_max_score_of_all_players()
     # player_similarity()
     # team_choice()
-    simulate_random_brackets(method="geometric", aggregate_ranking=False, aggregate_vectors=False)
+    # simulate_random_brackets(method="geometric", aggregate_ranking=False, aggregate_vectors=False)
+    play_all_scenarios()
