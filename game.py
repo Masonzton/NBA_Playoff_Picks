@@ -12,7 +12,7 @@ BRACKET_MATCHUP = Matchup(
         winsA=0,
         teamA=Matchup(
             # 1,8
-            winsA=0, # Thunder
+            winsA=1, # Thunder
             teamA=Matchup(
                 winsA=4,
                 teamA=Team.THUNDER,
@@ -20,7 +20,7 @@ BRACKET_MATCHUP = Matchup(
                 teamB=Team.GRIZZLIES,
             ),
             # 4,5 
-            winsB=1, # Nuggets
+            winsB=2, # Nuggets
             teamB=Matchup(
                 winsA=4,
                 teamA=Team.NUGGETS,
@@ -31,7 +31,7 @@ BRACKET_MATCHUP = Matchup(
         winsB=0,
         teamB=Matchup(
             # 3,6
-            winsA=0, # Timberwolves
+            winsA=1, # Timberwolves
             teamA=Matchup(
                 winsA=1,
                 teamA=Team.LAKERS,
@@ -54,7 +54,7 @@ BRACKET_MATCHUP = Matchup(
         winsA=0,
         teamA=Matchup(
             # 1,8
-            winsA=0, # Cavaliers
+            winsA=1, # Cavaliers
             teamA=Matchup(
                 winsA=4,
                 teamA=Team.CAVALIERS,

@@ -37,37 +37,36 @@ But, I believe the bucks can pull it off!!!
 
 Results
 ---
-Last Ran 5/7/2025 8:59 pm PST
-I removed the terminator to see the odds without it
+Last Ran 5/10/2025 1:28 pm PST
 ```
 player      W  Current Score  Max Score
 ---------------------------------------
-Gabe        *  46             122      
-Jack        *  45             114      
+Gabe        *  51             122      
+Terminator  _  49             105      
+Jack        *  46             114      
 Kunal       *  45             110      
-Terminator  _  45             105      
 Jay         _  43             105      
-Justin      _  36             103      
+Justin      _  38             103      
 Mason       _  36             91       
 Mike        _  35             90       
-Gavin       _  32             101      
+Gavin       _  34             101      
 Sean        _  29             73       
-Nick        _  13             36       
+Nick        _  14             36       
 
 
-******Running 10,000 random simulations using geometric method*****
-Player      Wins  Percentage %
---------------------------------
-Gabe        5734  57.3        
-Jack        1811  18.1        
-Kunal       1415  14.2        
-Terminator  1028  10.3        
-Gavin       12    0.1         
-Justin      0     0.0         
-Nick        0     0.0         
-Mike        0     0.0         
-Mason       0     0.0         
-Jay         0     0.0         
-Sean        0     0.0         
-encountered 396 ties or 4.0%
+******Running 1,000,000 random simulations using geometric method*****
+Player      Wins    Percentage %
+----------------------------------
+Gabe        678427  67.8        
+Terminator  128527  12.9        
+Jack        106441  10.6        
+Kunal       86238   8.6         
+Gavin       367     0.0         
+Justin      0       0.0         
+Nick        0       0.0         
+Mike        0       0.0         
+Mason       0       0.0         
+Jay         0       0.0         
+Sean        0       0.0         
+encountered 41,473 ties or 4.1%
 ```
