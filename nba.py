@@ -71,12 +71,12 @@ PLAYER_CHOICES = {
         Team.HEAT,
         Team.GRIZZLIES,
     ),
-    "Terminator": (
-        Team.TIMBERWOLVES,
-        Team.WARRIORS,
-        Team.THUNDER,
-        Team.CLIPPERS,
-    ),
+    # "Terminator": (
+    #     Team.TIMBERWOLVES,
+    #     Team.WARRIORS,
+    #     Team.THUNDER,
+    #     Team.CLIPPERS,
+    # ),
 }
 
 
@@ -612,7 +612,7 @@ def team_choice():
 
 if __name__ == "__main__":
     sanity_checks()
-    # get_max_score_of_all_players()
+    get_max_score_of_all_players()
     # player_similarity()
     # team_choice()
     # simulate_random_brackets(method="geometric", aggregate_ranking=False, aggregate_vectors=False)

@@ -37,34 +37,32 @@ But, I believe the bucks can pull it off!!!
 
 Results
 ---
-Last Ran 5/10/2025 1:28 pm PST
+Last Ran 5/18/2025 10:11 am PST
 ```
-player      W  Current Score  Max Score
----------------------------------------
-Gabe        *  51             122      
-Terminator  _  49             105      
-Jack        *  46             114      
-Kunal       *  45             110      
-Jay         _  43             105      
-Justin      _  38             103      
-Mason       _  36             91       
-Mike        _  35             90       
-Gavin       _  34             101      
-Sean        _  29             73       
-Nick        _  14             36       
+player  W  Current Score  Max Score
+-----------------------------------
+Gabe    *  64             96       
+Jack    *  52             76       
+Kunal   *  51             67       
+Jay     _  47             63       
+Justin  _  42             60       
+Gavin   _  38             47       
+Mason   _  38             38       
+Mike    _  37             37       
+Sean    _  29             29       
+Nick    _  18             27       
 
-460,800 possible brackets left
-Player      Wins    Percentage %
-----------------------------------
-Gabe        305239  66.2        
-Terminator  65795   14.3        
-Jack        50247   10.9        
-Kunal       39007   8.5         
-Gavin       512     0.1         
-Justin      0       0.0         
-Nick        0       0.0         
-Mike        0       0.0         
-Mason       0       0.0         
-Jay         0       0.0         
-Sean        0       0.0
+1,024 possible brackets left
+Player  Wins  Percentage %
+----------------------------
+Gabe    890   86.9        
+Jack    115   11.2        
+Kunal   19    1.9         
+Gavin   0     0.0         
+Justin  0     0.0         
+Nick    0     0.0         
+Mike    0     0.0         
+Mason   0     0.0         
+Jay     0     0.0         
+Sean    0     0.0
 ```
