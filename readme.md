@@ -37,27 +37,27 @@ But, I believe the bucks can pull it off!!!
 
 Results
 ---
-Last Ran 5/18/2025 10:11 am PST
+Last Ran 5/27/2025
 ```
 player  W  Current Score  Max Score
 -----------------------------------
-Gabe    *  64             96       
-Jack    *  52             76       
-Kunal   *  51             67       
-Jay     _  47             63       
-Justin  _  42             60       
-Gavin   _  38             47       
+Gabe    *  67             88       
+Jack    *  60             76       
+Kunal   _  53             67       
+Jay     _  49             63       
+Gavin   _  42             47       
+Justin  _  42             42       
 Mason   _  38             38       
 Mike    _  37             37       
 Sean    _  29             29       
-Nick    _  18             27       
+Nick    _  22             27       
 
-1,024 possible brackets left
+160 possible brackets left
 Player  Wins  Percentage %
 ----------------------------
-Gabe    890   86.9        
-Jack    115   11.2        
-Kunal   19    1.9         
+Gabe    103   64.4        
+Jack    57    35.6        
+Kunal   0     0.0         
 Gavin   0     0.0         
 Justin  0     0.0         
 Nick    0     0.0         
