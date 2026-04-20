@@ -9,84 +9,84 @@ BRACKET_MATCHUP = Matchup(
     # west
     winsA=0,
     teamA=Matchup(
-        winsA=3, # Thunder
+        winsA=0,
         teamA=Matchup(
             # 1,8
-            winsA=4, # Thunder
+            winsA=0,
             teamA=Matchup(
-                winsA=4,
+                winsA=0,
                 teamA=Team.THUNDER,
                 winsB=0,
-                teamB=Team.GRIZZLIES,
+                teamB=Team.SUNS,
             ),
             # 4,5 
-            winsB=3, # Nuggets
+            winsB=0,
             teamB=Matchup(
-                winsA=4,
-                teamA=Team.NUGGETS,
-                winsB=3,
-                teamB=Team.CLIPPERS,
+                winsA=0,
+                teamA=Team.LAKERS,
+                winsB=0,
+                teamB=Team.ROCKETS,
             ),
         ),
-        winsB=1, # Timberwolves
+        winsB=0,
         teamB=Matchup(
             # 3,6
-            winsA=4, # Timberwolves
+            winsA=0,
             teamA=Matchup(
-                winsA=1,
-                teamA=Team.LAKERS,
-                winsB=4,
+                winsA=0,
+                teamA=Team.NUGGETS,
+                winsB=0,
                 teamB=Team.TIMBERWOLVES,
             ),
             # 2,7
-            winsB=1, # Warriors
+            winsB=0,
             teamB=Matchup(
-                winsA=3,
-                teamA=Team.ROCKETS,
-                winsB=4,
-                teamB=Team.WARRIORS,
+                winsA=0,
+                teamA=Team.SPURS,
+                winsB=0,
+                teamB=Team.TRAIL_BLAZERS,
             ),
         ),
     ),
     # east
     winsB=0,
     teamB=Matchup(
-        winsA=2, # Pacers
+        winsA=0,
         teamA=Matchup(
             # 1,8
-            winsA=1, # Cavaliers
+            winsA=0,
             teamA=Matchup(
-                winsA=4,
-                teamA=Team.CAVALIERS,
+                winsA=0,
+                teamA=Team.PISTONS,
                 winsB=0,
-                teamB=Team.HEAT,
+                teamB=Team.MAGIC,
             ),
             # 4,5
-            winsB=4, # Pacers
+            winsB=0,
             teamB=Matchup(
-                winsA=4,
-                teamA=Team.PACERS,
-                winsB=1,
-                teamB=Team.BUCKS,
+                winsA=0,
+                teamA=Team.CAVALIERS,
+                winsB=0,
+                teamB=Team.RAPTORS,
             ),
         ),
-        winsB=1, # Knicks
+        winsB=0,
         teamB=Matchup(
             # 3,6
-            winsA=4, # Knicks
+            winsA=0,
             teamA=Matchup(
-                winsA=4,
+                winsA=0,
                 teamA=Team.KNICKS,
-                winsB=2,
-                teamB=Team.PISTONS,
+                winsB=0,
+                teamB=Team.HAWKS,
             ),
             # 2,7
-            winsB=2, # Celtics
+            winsB=0,
             teamB=Matchup(
-                winsA=4,
+                winsA=0,
                 teamA=Team.CELTICS,
-                winsB=1,
-                teamB=Team.MAGIC,
+                winsB=0,
+                teamB=Team.SEVENTY_SIXERS,
             ),
         ),
     ),

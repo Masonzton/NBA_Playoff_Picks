@@ -10,73 +10,73 @@ from my_types import Team, TEAMS_IN_ORDER, Matchup
 from game import BRACKET_MATCHUP
 import itertools
 
-PLAYER_CHOICES = {
-    "Jack": (
+PLAYER_CHOICES : dict[str, Tuple[Team, Team, Team, Team]]= {
+    "Justin": (
         Team.THUNDER,
-        Team.WARRIORS,
-        Team.CLIPPERS,
-        Team.PACERS,
+        Team.NUGGETS,
+        Team.KNICKS,
+        Team.ROCKETS,
+    ),
+    "Jack": (
+        Team.MAGIC,
+        Team.HAWKS,
+        Team.THUNDER,
+        Team.NUGGETS,
     ),
     "Kunal": (
-        Team.CELTICS,
-        Team.CLIPPERS,
-        Team.WARRIORS,
-        Team.KNICKS,
+        Team.THUNDER,
+        Team.CAVALIERS,
+        Team.TIMBERWOLVES,
+        Team.HAWKS,
+    ),
+    "Nick": (
+        Team.ROCKETS,
+        Team.NUGGETS,
+        Team.CAVALIERS,
+        Team.THUNDER,
     ),
     "Gabe": (
-        Team.WARRIORS,
-        Team.TIMBERWOLVES,
+        Team.THUNDER,
         Team.NUGGETS,
         Team.CELTICS,
+        Team.CAVALIERS,
+    ),
+    "Mike": (
+        Team.NUGGETS,
+        Team.ROCKETS,
+        Team.CELTICS,
+        Team.PISTONS,
+    ),
+    "Mason": (
+        Team.CAVALIERS,
+        Team.HAWKS,
+        Team.THUNDER,
+        Team.NUGGETS,
+    ),
+    "Jay": (
+        Team.NUGGETS,
+        Team.KNICKS,
+        Team.CAVALIERS,
+        Team.ROCKETS,
+    ),
+    "Sean": (
+        Team.SUNS,
+        Team.TIMBERWOLVES,
+        Team.LAKERS,
+        Team.NUGGETS,
     ),
     "Gavin": (
         Team.THUNDER,
-        Team.CELTICS,
-        Team.CAVALIERS,
-        Team.WARRIORS,
-    ),
-    "Justin": (
-        Team.CELTICS,
-        Team.LAKERS,
-        Team.WARRIORS,
-        Team.NUGGETS,
-    ),
-    "Nick": (
-        Team.THUNDER,
-        Team.CELTICS,
-        Team.LAKERS,
-        Team.BUCKS,
-    ),
-    "Mike": (
-        Team.LAKERS,
-        Team.CLIPPERS,
-        Team.WARRIORS,
-        Team.CELTICS,
-    ),
-    "Mason": (
-        Team.WARRIORS,
-        Team.CLIPPERS,
-        Team.BUCKS,
-        Team.CELTICS,
-    ),
-    "Jay": (
-        Team.LAKERS,
-        Team.WARRIORS,
+        Team.SPURS,
         Team.KNICKS,
-        Team.CLIPPERS,
+        Team.CAVALIERS,
     ),
-    "Sean": (
-        Team.CLIPPERS,
-        Team.WARRIORS,
-        Team.HEAT,
-        Team.GRIZZLIES,
+    "Terminator": (
+        Team.ROCKETS,
+        Team.NUGGETS,
+        Team.CAVALIERS,
+        Team.KNICKS,
     ),
-    # "Terminator": (
-    #     Team.TIMBERWOLVES,
-    #     Team.WARRIORS,
-    #     Team.THUNDER,
-    #     Team.CLIPPERS,
-    # ),
 }
 
 
@@ -330,15 +330,6 @@ def random_geometric_bracket_fill(bracket: Matchup):
         bracket.add_random_win()
 
 ELIMINATED_TEAMS = [
-    Team.GRIZZLIES,
-    Team.CLIPPERS,
-    Team.LAKERS,
-    Team.HEAT,
-    Team.BUCKS,
-    Team.PISTONS,
-    Team.MAGIC,
-    Team.ROCKETS,
-    Team.WARRIORS,
 ]
 
 def set_wins_by_match_id(root: Matchup, id: List[int], winsA: int, winsB: int):
@@ -377,7 +368,6 @@ def get_best_player(player_scores, wins_per_team):
             best_players.append(player)
 
     if len(best_players) > 1:
-        # ties_amounts += 1
         # see if their first choice team has scored more points than theirs
         for idx in range(4):
             best_sub_score = 0
@@ -479,7 +469,7 @@ def simulate_random_brackets(
         f"******Running {SIMULATION_TO_RUN:,} random simulations using {method} method*****"
     )
     player_wins = {player: 0 for player in PLAYER_CHOICES.keys()}
-    ties_amounts = 0
+    player_total_score = {player: 0 for player in PLAYER_CHOICES.keys()}
 
 
     if aggregate_ranking:
@@ -502,7 +492,6 @@ def simulate_random_brackets(
         else:
             raise NotImplementedError(f"{method} not implemented")
 
-        # TODO: account for ties
         player_scores, wins_per_team = compute_all_scores_from_bracket(
             bracket=bracket_copy, player_choices=PLAYER_CHOICES
         )
@@ -510,6 +499,8 @@ def simulate_random_brackets(
         best_player = get_best_player(player_scores=player_scores, wins_per_team=wins_per_team)
 
         player_wins[best_player] += 1
+        for player in PLAYER_CHOICES.keys():
+            player_total_score[player] += player_scores[player]
 
         if aggregate_vectors:
             wins_per_team_vector = [wins_per_team[team] for team in Team]
@@ -531,17 +522,14 @@ def simulate_random_brackets(
                 player_ranking_distribution[player][idx] += 1
 
 
-    headers = ("Player", "Wins", "Percentage %")
+    headers = ("Player", "Wins", "Percentage %", "Average Score")
     data = [
-        (player, wins, f"{100*wins/SIMULATION_TO_RUN:.1f}")
+        (player, wins, f"{100*wins/SIMULATION_TO_RUN:.1f}", (player_total_score[player] / SIMULATION_TO_RUN))
         for player, wins in player_wins.items()
     ]
     # sort by number of wins in simulation
     data.sort(key=lambda x: x[1], reverse=1)
     print_tabulate(header=headers, data=data)
-    print(
-        f"encountered {ties_amounts:,} ties or {100 * ties_amounts/SIMULATION_TO_RUN:.1f}%"
-    )
 
     if aggregate_ranking:
         print("\n\nWhat % of times each player wins against another player, useful for seeing which player 'knocked out' each other")
@@ -563,6 +551,8 @@ def simulate_random_brackets(
                 print(f"{team}: min: {player_vectors_min[player][idx]} max: {player_vectors_max[player][idx]}")
         # print(f"max: {player_vectors_max}")
         # print(f"min: {player_vectors_min}")
+    
+    return data
 
 
 def sanity_checks():
@@ -577,6 +567,8 @@ def sanity_checks():
     for idx, row in enumerate(MATCHUP_ODDS):
         # order of those matchup rows can not be changed
         assert row[0] == TEAMS_IN_ORDER[idx].team_name, "MATCHUP_ODDS rows were re-arranged, that's not allowed since it's fragile..."
+
+    # TODO: Check that the BRACKET_MATCHUP doesn't contain any duplicate teams and does not skip a team
 
 
 def player_similarity():
@@ -595,6 +587,28 @@ def player_similarity():
 
     print_tabulate(header=["Player"] + header, data=data)
 
+    data_matches : list[Tuple[str, int, str]]= []
+    print("\n\nEach players most common matching's")
+    for idx, player in enumerate(header):
+        row = data[idx]
+        matches : list[int] = row[1:]
+        assert row[0] == player
+
+        matches_minus_player = deepcopy(matches)
+        matches_minus_player.pop(idx)
+        max_val = max(matches_minus_player)
+
+        all_max_indices = [i for i, x in enumerate(matches) if x == max_val]
+
+        matching_players = [header[i] for i in all_max_indices]
+        data_matches.append((player, max_val, str(matching_players)))
+    
+    header = ("Player", "Most Matches", "Matching Players")
+    data_matches.sort(key= lambda x: x[1], reverse=True)
+    print_tabulate(header, data_matches)
+
+
+
 
 def team_choice():
     """Print how much each particular team is chosen"""
@@ -606,14 +620,38 @@ def team_choice():
             team_to_amount[team] += 1
 
     data = [(team.name, amount) for team, amount in team_to_amount.items()]
+    data.sort(key=lambda x: x[1], reverse=True)
     print("\n\nHow much was each team chosen by players")
     print_tabulate(header=header, data=data)
+    #TODO: sort by most common to least common
+
+def get_best_possible_bracket():
+    """Based on the probabilities set up in MATCHUP_ODDS, simulate to get the bracket with the best possible score"""
+
+    # TODONE fill out player choice will all 4 team choices
+    all_player_choices : list[Tuple[Team, Team, Team, Team]]= list(itertools.combinations(Team, 4))
+
+    global PLAYER_CHOICES
+    PLAYER_CHOICES = {str(i) : all_player_choices[i] for i in range(len(all_player_choices))}
+
+    # for each combination, simulate a random bracket, and then record the score
+    # might be better to actually fill out a player_choice with every single possible combination, run all brackets
+    # and 1, see who comes out on top, and 2. see which one has the highest average score
+    headers, data = simulate_random_brackets(method="geometric", aggregate_ranking=False, aggregate_vectors=False)
+
+    print_tabulate(header=headers, data=data[0:10])
+    # TODONE: modify function to return table + average score of each player
+    # TODONE: Print out team that has the highest win % and the team with highest average score
+    # TODO: fill out matchup odds based on BPI
+
 
 
 if __name__ == "__main__":
     sanity_checks()
+    # get_best_possible_bracket()
     get_max_score_of_all_players()
-    # player_similarity()
-    # team_choice()
-    # simulate_random_brackets(method="geometric", aggregate_ranking=False, aggregate_vectors=False)
-    play_all_scenarios()
+    player_similarity()
+    team_choice()
+    simulate_random_brackets(method="geometric", aggregate_ranking=False, aggregate_vectors=False)
+    # play_all_scenarios()
+    # TODO: Question, why is Jay never winning a game against terminator?

@@ -1,5 +1,5 @@
 from enum import Enum, auto
-from typing import Union
+from typing import Union, Optional
 from random import choices as random_choice
 from functools import cached_property
 from config import MATCHUP_ODDS
@@ -9,21 +9,21 @@ times_index_is_called = 0
 
 class Team(Enum):
     THUNDER = ("THUNDER", 1)
-    GRIZZLIES = ("GRIZZLIES", 8)
-    NUGGETS = ("NUGGETS", 4)
-    CLIPPERS = ("CLIPPERS", 5)
-    LAKERS = ("LAKERS", 3)
+    SUNS = ("SUNS", 8)
+    LAKERS = ("LAKERS", 4)
+    ROCKETS = ("ROCKETS", 5)
+    NUGGETS = ("NUGGETS", 3)
     TIMBERWOLVES = ("TIMBERWOLVES", 6)
-    ROCKETS = ("ROCKETS", 2)
-    WARRIORS = ("WARRIORS", 7)
-    CAVALIERS = ("CAVALIERS", 1)
-    HEAT = ("HEAT", 8)
-    PACERS = ("PACERS", 4)
-    BUCKS = ("BUCKS", 5)
+    SPURS = ("SPURS", 2)
+    TRAIL_BLAZERS = ("TRAIL_BLAZERS", 7)
+    PISTONS = ("PISTONS", 1)
+    MAGIC = ("MAGIC", 8)
+    CAVALIERS = ("CAVALIERS", 4)
+    RAPTORS = ("RAPTORS", 5)
     KNICKS = ("KNICKS", 3)
-    PISTONS = ("PISTONS", 6)
+    HAWKS = ("HAWKS", 6)
     CELTICS = ("CELTICS", 2)
-    MAGIC = ("MAGIC", 7)
+    SEVENTY_SIXERS = ("SEVENTY_SIXERS", 7)
 
     def __init__(self, name: str, position: int):
         self.team_name = name
@@ -39,6 +39,8 @@ class Team(Enum):
             return 3
         elif self.position <= 8:
             return 4
+        else:
+            raise ValueError(f"Unhandled position: {self.position}")
 
     @cached_property
     def index(self) -> int:
@@ -51,7 +53,7 @@ class Team(Enum):
         assert times_index_is_called <= length_of_class
         return value
     
-    def debug_print(self) -> int:
+    def debug_print(self) -> None:
         print(times_index_is_called)
 
     def get_team(self) -> "Team":
@@ -62,7 +64,7 @@ TEAMS_IN_ORDER = [team for team in Team]
 TEAM_TO_INDEX = {team: idx for idx, team in enumerate(TEAMS_IN_ORDER)}
 
 
-def get_matchup_odds(teamA: Team, teamB: Team):
+def get_matchup_odds(teamA: Team, teamB: Team) -> float:
     """
     Get odds that teamA beats teamB
     """
@@ -110,7 +112,7 @@ class Matchup:
         if type(teamB) == Matchup:
             self.teamB.parent = self
 
-    def get_team(self) -> "Team":
+    def get_team(self) -> Optional["Team"]:
         """Updates winner and returns winner"""
         if self._winner is None:
             if self.winsA == 4:
