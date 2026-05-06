@@ -29,8 +29,8 @@ Maximum scores are also computed
 Results
 ---
 Last Ran 5/06/2026
-Running 100,000 random simulations using geometric method
-Chance of winning the game
+
+Running 100,000 random simulations using geometric method. All nba teams have an equal chance of winning
 | Player     | Wins  | Percentage % | Average Score |
 | ---------- | ----- | ------------ | ------------- |
 | Kunal      | 52493 | 52.5         | 62.84773      |
@@ -38,7 +38,9 @@ Chance of winning the game
 | Sean       | 16168 | 16.2         | 50.61302      |
 | Terminator | 80    | 0.1          | 46.3241       |
 
-Distribution of ranking for each player
+Distribution of ranking for each player. % chance they get this particular position
+
+NOTE: does not account for tie's correctly, so it differs slightly from above
 | Player     | 1    | 2    | 3    | 4    | 5    | 6    | 7    | 8    | 9    | 10   | 11   |
 | ---------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
 | Justin     | 0.0  | 3.5  | 12.4 | 13.7 | 10.5 | 32.3 | 1.5  | 7.3  | 15.9 | 2.6  | 0.1  |
