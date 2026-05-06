@@ -100,18 +100,23 @@ def print_tabulate(header: Tuple[str], data: List[Tuple]):
         max(len(str(row[i])) for row in data + [header]) for i in range(len(header))
     ]
 
+    def print_list_to_markdown(data_row: list[str]):
+        row_str = "| " + " | ".join(data_row) + " |"
+        print(row_str)
+
     # Print the header
     header_str_list = [f"{header[i]:<{col_widths[i]}}" for i in range(len(header))]
-    header_str = "  ".join(header_str_list)
-    print(header_str)
-    print("-" * (sum(col_widths) + 6))
+    print_list_to_markdown(header_str_list)
+
+    #print dash row
+    dash_row = [ "-" * width for width in col_widths]
+    print_list_to_markdown(dash_row)
 
     # Print each row
     for row in data:
         assert len(row) == len(header)
         row_str_list = [f"{row[i]:<{col_widths[i]}}" for i in range(len(row))]
-        row_str = "  ".join(row_str_list)
-        print(row_str)
+        print_list_to_markdown(row_str_list)
 
 
 def greedy_fill_bracket(bracket: Matchup, choices: Tuple[Team, Team, Team, Team]):
@@ -652,6 +657,7 @@ if __name__ == "__main__":
     get_max_score_of_all_players()
     player_similarity()
     team_choice()
-    simulate_random_brackets(method="geometric", aggregate_ranking=False, aggregate_vectors=False)
+    simulate_random_brackets(method="geometric", aggregate_ranking=True, aggregate_vectors=False)
+    # TODO: in aggregate_vectors, should only print people that have a chance of winning
+    # Should print min scores of each team that person has, and max scores of each team that person doesn't have
     # play_all_scenarios()
-    # TODO: Question, why is Jay never winning a game against terminator?

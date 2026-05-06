@@ -12,38 +12,38 @@ BRACKET_MATCHUP = Matchup(
         winsA=0,
         teamA=Matchup(
             # 1,8
-            winsA=0,
+            winsA=1, # Thunder
             teamA=Matchup(
-                winsA=0,
+                winsA=4,
                 teamA=Team.THUNDER,
                 winsB=0,
                 teamB=Team.SUNS,
             ),
             # 4,5 
-            winsB=0,
+            winsB=0, # Lakers
             teamB=Matchup(
-                winsA=0,
+                winsA=4,
                 teamA=Team.LAKERS,
-                winsB=0,
+                winsB=2,
                 teamB=Team.ROCKETS,
             ),
         ),
         winsB=0,
         teamB=Matchup(
             # 3,6
-            winsA=0,
+            winsA=1, # TIMBERWOLVES
             teamA=Matchup(
-                winsA=0,
+                winsA=2,
                 teamA=Team.NUGGETS,
-                winsB=0,
+                winsB=4,
                 teamB=Team.TIMBERWOLVES,
             ),
             # 2,7
-            winsB=0,
+            winsB=0, # SPURS
             teamB=Matchup(
-                winsA=0,
+                winsA=4,
                 teamA=Team.SPURS,
-                winsB=0,
+                winsB=1,
                 teamB=Team.TRAIL_BLAZERS,
             ),
         ),
@@ -54,38 +54,38 @@ BRACKET_MATCHUP = Matchup(
         winsA=0,
         teamA=Matchup(
             # 1,8
-            winsA=0,
+            winsA=1, # PISTONS
             teamA=Matchup(
-                winsA=0,
+                winsA=4,
                 teamA=Team.PISTONS,
-                winsB=0,
+                winsB=3,
                 teamB=Team.MAGIC,
             ),
             # 4,5
-            winsB=0,
+            winsB=0, # CAVALIERS
             teamB=Matchup(
-                winsA=0,
+                winsA=4,
                 teamA=Team.CAVALIERS,
-                winsB=0,
+                winsB=3,
                 teamB=Team.RAPTORS,
             ),
         ),
         winsB=0,
         teamB=Matchup(
             # 3,6
-            winsA=0,
+            winsA=1, # KNICKS
             teamA=Matchup(
-                winsA=0,
+                winsA=4,
                 teamA=Team.KNICKS,
-                winsB=0,
+                winsB=2,
                 teamB=Team.HAWKS,
             ),
             # 2,7
-            winsB=0,
+            winsB=0, # SEVENTY_SIXERS
             teamB=Matchup(
-                winsA=0,
+                winsA=3,
                 teamA=Team.CELTICS,
-                winsB=0,
+                winsB=4,
                 teamB=Team.SEVENTY_SIXERS,
             ),
         ),
