@@ -1,0 +1,302 @@
+{
+    "thunder": {
+        "Team Name": "thunder",
+        "Season type": 3,
+        "bpi": 11.543,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 96.7,
+        "probmakeconfchamp": 87.5,
+        "probmaketitlegame": 63.5,
+        "probwintitle": 47.4
+    },
+    "spurs": {
+        "Team Name": "spurs",
+        "Season type": 3,
+        "bpi": 8.94,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 96.6,
+        "probmakeconfchamp": 72.1,
+        "probmaketitlegame": 27.400000000000002,
+        "probwintitle": 16.6
+    },
+    "pistons": {
+        "Team Name": "pistons",
+        "Season type": 3,
+        "bpi": 8.453,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 87.5,
+        "probmakeconfchamp": 68.0,
+        "probmaketitlegame": 38.1,
+        "probwintitle": 13.3
+    },
+    "celtics": {
+        "Team Name": "celtics",
+        "Season type": 3,
+        "bpi": 8.146,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 90.8,
+        "probmakeconfchamp": 58.699999999999996,
+        "probmaketitlegame": 33.5,
+        "probwintitle": 12.6
+    },
+    "knicks": {
+        "Team Name": "knicks",
+        "Season type": 3,
+        "bpi": 7.628,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 71.8,
+        "probmakeconfchamp": 33.300000000000004,
+        "probmaketitlegame": 17.7,
+        "probwintitle": 5.6000000000000005
+    },
+    "nuggets": {
+        "Team Name": "nuggets",
+        "Season type": 3,
+        "bpi": 6.452,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 69.5,
+        "probmakeconfchamp": 23.1,
+        "probmaketitlegame": 5.800000000000001,
+        "probwintitle": 2.3
+    },
+    "hornets": {
+        "Team Name": "hornets",
+        "Season type": 3,
+        "bpi": 6.207,
+        "probmakeplayoffs": 0.0,
+        "probmakeconfsemi": 0.0,
+        "probmakeconfchamp": 0.0,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    },
+    "rockets": {
+        "Team Name": "rockets",
+        "Season type": 3,
+        "bpi": 4.963,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 49.7,
+        "probmakeconfchamp": 6.800000000000001,
+        "probmaketitlegame": 1.7000000000000002,
+        "probwintitle": 0.5
+    },
+    "cavaliers": {
+        "Team Name": "cavaliers",
+        "Season type": 3,
+        "bpi": 4.599,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 84.6,
+        "probmakeconfchamp": 24.4,
+        "probmaketitlegame": 7.000000000000001,
+        "probwintitle": 1.0999999999999999
+    },
+    "hawks": {
+        "Team Name": "hawks",
+        "Season type": 3,
+        "bpi": 3.218,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 28.199999999999996,
+        "probmakeconfchamp": 6.6000000000000005,
+        "probmaketitlegame": 1.7999999999999998,
+        "probwintitle": 0.3
+    },
+    "lakers": {
+        "Team Name": "lakers",
+        "Season type": 3,
+        "bpi": 3.189,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 50.3,
+        "probmakeconfchamp": 4.8,
+        "probmaketitlegame": 1.0999999999999999,
+        "probwintitle": 0.2
+    },
+    "raptors": {
+        "Team Name": "raptors",
+        "Season type": 3,
+        "bpi": 3.055,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 15.4,
+        "probmakeconfchamp": 3.4000000000000004,
+        "probmaketitlegame": 0.8,
+        "probwintitle": 0.1
+    },
+    "timberwolves": {
+        "Team Name": "timberwolves",
+        "Season type": 3,
+        "bpi": 2.573,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 30.599999999999998,
+        "probmakeconfchamp": 4.0,
+        "probmaketitlegame": 0.4,
+        "probwintitle": 0.1
+    },
+    "magic": {
+        "Team Name": "magic",
+        "Season type": 3,
+        "bpi": 2.408,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 12.5,
+        "probmakeconfchamp": 4.2,
+        "probmaketitlegame": 0.8999999999999999,
+        "probwintitle": 0.1
+    },
+    "clippers": {
+        "Team Name": "clippers",
+        "Season type": 3,
+        "bpi": 2.031,
+        "probmakeplayoffs": 0.0,
+        "probmakeconfsemi": 0.0,
+        "probmakeconfchamp": 0.0,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    },
+    "heat": {
+        "Team Name": "heat",
+        "Season type": 3,
+        "bpi": 1.9,
+        "probmakeplayoffs": 0.0,
+        "probmakeconfsemi": 0.0,
+        "probmakeconfchamp": 0.0,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    },
+    "suns": {
+        "Team Name": "suns",
+        "Season type": 3,
+        "bpi": 0.822,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 3.3000000000000003,
+        "probmakeconfchamp": 0.8999999999999999,
+        "probmaketitlegame": 0.1,
+        "probwintitle": 0.0
+    },
+    "SEVENTY_SIXERS": {
+        "Team Name": "SEVENTY_SIXERS",
+        "Season type": 3,
+        "bpi": 0.6,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 9.2,
+        "probmakeconfchamp": 1.4000000000000001,
+        "probmaketitlegame": 0.2,
+        "probwintitle": 0.0
+    },
+    "trail_blazers": {
+        "Team Name": "trail_blazers",
+        "Season type": 3,
+        "bpi": 0.43,
+        "probmakeplayoffs": 100.0,
+        "probmakeconfsemi": 3.4000000000000004,
+        "probmakeconfchamp": 0.7000000000000001,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    },
+    "warriors": {
+        "Team Name": "warriors",
+        "Season type": 3,
+        "bpi": -1.05,
+        "probmakeplayoffs": 0.0,
+        "probmakeconfsemi": 0.0,
+        "probmakeconfchamp": 0.0,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    },
+    "pelicans": {
+        "Team Name": "pelicans",
+        "Season type": 3,
+        "bpi": -3.051,
+        "probmakeplayoffs": 0.0,
+        "probmakeconfsemi": 0.0,
+        "probmakeconfchamp": 0.0,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    },
+    "mavericks": {
+        "Team Name": "mavericks",
+        "Season type": 3,
+        "bpi": -5.164,
+        "probmakeplayoffs": 0.0,
+        "probmakeconfsemi": 0.0,
+        "probmakeconfchamp": 0.0,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    },
+    "bulls": {
+        "Team Name": "bulls",
+        "Season type": 3,
+        "bpi": -5.807,
+        "probmakeplayoffs": 0.0,
+        "probmakeconfsemi": 0.0,
+        "probmakeconfchamp": 0.0,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    },
+    "jazz": {
+        "Team Name": "jazz",
+        "Season type": 3,
+        "bpi": -7.385,
+        "probmakeplayoffs": 0.0,
+        "probmakeconfsemi": 0.0,
+        "probmakeconfchamp": 0.0,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    },
+    "pacers": {
+        "Team Name": "pacers",
+        "Season type": 3,
+        "bpi": -7.853,
+        "probmakeplayoffs": 0.0,
+        "probmakeconfsemi": 0.0,
+        "probmakeconfchamp": 0.0,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    },
+    "bucks": {
+        "Team Name": "bucks",
+        "Season type": 3,
+        "bpi": -9.983,
+        "probmakeplayoffs": 0.0,
+        "probmakeconfsemi": 0.0,
+        "probmakeconfchamp": 0.0,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    },
+    "wizards": {
+        "Team Name": "wizards",
+        "Season type": 3,
+        "bpi": -10.645,
+        "probmakeplayoffs": 0.0,
+        "probmakeconfsemi": 0.0,
+        "probmakeconfchamp": 0.0,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    },
+    "nets": {
+        "Team Name": "nets",
+        "Season type": 3,
+        "bpi": -11.205,
+        "probmakeplayoffs": 0.0,
+        "probmakeconfsemi": 0.0,
+        "probmakeconfchamp": 0.0,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    },
+    "kings": {
+        "Team Name": "kings",
+        "Season type": 3,
+        "bpi": -11.779,
+        "probmakeplayoffs": 0.0,
+        "probmakeconfsemi": 0.0,
+        "probmakeconfchamp": 0.0,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    },
+    "grizzlies": {
+        "Team Name": "grizzlies",
+        "Season type": 3,
+        "bpi": -13.233,
+        "probmakeplayoffs": 0.0,
+        "probmakeconfsemi": 0.0,
+        "probmakeconfchamp": 0.0,
+        "probmaketitlegame": 0.0,
+        "probwintitle": 0.0
+    }
+}
