@@ -12,7 +12,7 @@ BRACKET_MATCHUP = Matchup(
         winsA=0,
         teamA=Matchup(
             # 1,8
-            winsA=1, # Thunder
+            winsA=3, # Thunder
             teamA=Matchup(
                 winsA=4,
                 teamA=Team.THUNDER,
@@ -39,7 +39,7 @@ BRACKET_MATCHUP = Matchup(
                 teamB=Team.TIMBERWOLVES,
             ),
             # 2,7
-            winsB=0, # SPURS
+            winsB=2, # SPURS
             teamB=Matchup(
                 winsA=4,
                 teamA=Team.SPURS,
@@ -54,7 +54,7 @@ BRACKET_MATCHUP = Matchup(
         winsA=0,
         teamA=Matchup(
             # 1,8
-            winsA=1, # PISTONS
+            winsA=2, # PISTONS
             teamA=Matchup(
                 winsA=4,
                 teamA=Team.PISTONS,
@@ -62,7 +62,7 @@ BRACKET_MATCHUP = Matchup(
                 teamB=Team.MAGIC,
             ),
             # 4,5
-            winsB=0, # CAVALIERS
+            winsB=1, # CAVALIERS
             teamB=Matchup(
                 winsA=4,
                 teamA=Team.CAVALIERS,
@@ -70,10 +70,10 @@ BRACKET_MATCHUP = Matchup(
                 teamB=Team.RAPTORS,
             ),
         ),
-        winsB=0,
+        winsB=0, # KNICKS
         teamB=Matchup(
             # 3,6
-            winsA=1, # KNICKS
+            winsA=4, # KNICKS
             teamA=Matchup(
                 winsA=4,
                 teamA=Team.KNICKS,

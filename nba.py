@@ -608,7 +608,7 @@ def player_similarity():
         matching_players = [header[i] for i in all_max_indices]
         data_matches.append((player, max_val, str(matching_players)))
     
-    header = ("Player", "Most Matches", "Matching Players")
+    header = ("Player", "# of Teams in Common", "Matching Players")
     data_matches.sort(key= lambda x: x[1], reverse=True)
     print_tabulate(header, data_matches)
 
